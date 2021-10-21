@@ -58,7 +58,7 @@ namespace ShadowBlog.Areas.Identity.Pages.Account
             public string LastName { get; set; }
 
             [Required]
-            [Display(Name = "Last Name")]
+            [Display(Name = "Display Name")]
             [StringLength(60, ErrorMessage = "The {0} must be at least {2} and at most {1} characteers long.")]
             public string DisplayName { get; set; }
 
