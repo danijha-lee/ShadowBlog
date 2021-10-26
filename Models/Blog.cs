@@ -26,10 +26,14 @@ namespace ShadowBlog.Models
         public byte[] ImageData { get; set; }
         public string ContentType { get; set; }
 
+        public string UserId { get; set; }
+
         [NotMapped]
         public IFormFile Image { get; set; }
 
         //Add a navigational property to reference all of my children
         public ICollection<BlogPost> BlogPosts = new HashSet<BlogPost>();
+
+        public virtual BlogUser User { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using ShadowBlog.Data;
 using ShadowBlog.Models;
 using ShadowBlog.Services.Interfaces;
+using ShadowBlog.Enums;
 
 namespace ShadowBlog.Controllers
 {
@@ -20,6 +21,20 @@ namespace ShadowBlog.Controllers
         {
             _context = context;
             _imageService = imageService;
+        }
+
+        public async Task<IActionResult> ChildIndex(int blogId)
+        {
+            //I dont want to get all of the blog posts
+            //I want to get all of the blog posts where the BlogId = blogId
+            //Also, I only want to grab production ready BlogPosts
+
+            var blogPosts = _context.BlogPosts
+                .Include(b => b.Blog)
+                .Where(b => b.BlogId == blogId && b.ReadyStatus == ReadyState.ProductionReady)
+                .OrderByDescending(b => b.Created);
+
+            return View("Index", await blogPosts.ToListAsync());
         }
 
         // GET: BlogPosts
@@ -49,8 +64,22 @@ namespace ShadowBlog.Controllers
         }
 
         // GET: BlogPosts/Create
-        public IActionResult Create()
+        public IActionResult Create(int? blogId)
         {
+            //If I am given an id
+            //1. It represents the BlogPost.BlogId
+            //2. I dont show the select list  to the user (If i already have the blog id
+            //3. I embed the incoming id into the form somehow that it is treated as
+
+            if (blogId is not null)
+            {
+                BlogPost newBlogPost = new()
+                {
+                    BlogId = (int)blogId,
+                };
+                return View(newBlogPost);
+            }
+
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name");
             return View();
         }

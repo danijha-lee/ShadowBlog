@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,15 @@ namespace ShadowBlog.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IImageService _imageService;
+        private readonly UserManager<BlogUser> _userManager;
 
-        public BlogsController(ApplicationDbContext context, IImageService imageService)
+        public BlogsController(ApplicationDbContext context,
+                            IImageService imageService,
+                            UserManager<BlogUser> userManager)
         {
             _context = context;
             _imageService = imageService;
+            _userManager = userManager;
         }
 
         // GET: Blogs
@@ -63,7 +68,7 @@ namespace ShadowBlog.Controllers
             {
                 if (blog.Image is null)
                 {
-                    blog.ImageData = await _imageService.EncodeImageAsync("defaultBlog.jpg");
+                    blog.ImageData = await _imageService.EncodeImageAsync("defualtBlog.jpg");
                     blog.ContentType = "jpg";
                 }
                 else
@@ -82,6 +87,7 @@ namespace ShadowBlog.Controllers
                 }
 
                 blog.Created = DateTime.Now;
+                blog.UserId = _userManager.GetUserId(User);
 
                 _context.Add(blog);
                 await _context.SaveChangesAsync();
@@ -111,7 +117,7 @@ namespace ShadowBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Created,Image,ImageDate,ContentType")] Blog blog)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Created,Image,ImageData,ContentType,UserId")] Blog blog)
         {
             if (id != blog.Id)
             {
@@ -126,7 +132,8 @@ namespace ShadowBlog.Controllers
                     {
                         if (!_imageService.ValidImage(blog.Image))
                         {
-                            ModelState.AddModelError("Image", "There was a problem with the image you selected. Please choose a different Image.");
+                            //We need to add a custom Model Error and inform the user
+                            ModelState.AddModelError("Image", "Please choose a valid image");
                             return View(blog);
                         }
                         else
@@ -135,6 +142,7 @@ namespace ShadowBlog.Controllers
                             blog.ContentType = _imageService.ContentType(blog.Image);
                         }
                     }
+
                     _context.Update(blog);
                     await _context.SaveChangesAsync();
                 }

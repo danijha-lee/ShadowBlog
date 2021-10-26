@@ -50,8 +50,9 @@
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>|
+                    <a asp-action="ChildIndex" asp-controller="Blogposts" asp-route-blogId="@item.Id">All Posts</a> |
+                    <a asp-action="Create" asp-controller="Blogposts" asp-route-Id="@item.Id">New Post</a> |
                 </td>
             </tr>
         }
