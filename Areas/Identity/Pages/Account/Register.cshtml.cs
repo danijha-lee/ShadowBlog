@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using ShadowBlog.Models;
+using ShadowBlog.Services.Interfaces;
 
 namespace ShadowBlog.Areas.Identity.Pages.Account
 {
@@ -25,17 +26,20 @@ namespace ShadowBlog.Areas.Identity.Pages.Account
         private readonly UserManager<BlogUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IImageService _imageService;
 
         public RegisterModel(
             UserManager<BlogUser> userManager,
             SignInManager<BlogUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IImageService imageService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _imageService = imageService;
         }
 
         [BindProperty]
@@ -49,27 +53,21 @@ namespace ShadowBlog.Areas.Identity.Pages.Account
         {
             [Required]
             [Display(Name = "First Name")]
-            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at most {1} characteers long.")]
+            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and no more than {1} characters long", MinimumLength = 2)]
             public string FirstName { get; set; }
 
             [Required]
             [Display(Name = "Last Name")]
-            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at most {1} characteers long.")]
+            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and no more than {1} characters long", MinimumLength = 2)]
             public string LastName { get; set; }
 
             [Required]
             [Display(Name = "Display Name")]
-            [StringLength(60, ErrorMessage = "The {0} must be at least {2} and at most {1} characteers long.")]
+            [StringLength(60, ErrorMessage = "The {0} must be at least {2} and no more than {1} characters long", MinimumLength = 2)]
             public string DisplayName { get; set; }
 
-            [NotMapped]
-            public string FullName
-            {
-                get
-                {
-                    return $"{FirstName} {LastName}";
-                }
-            }
+            [Display(Name = "User Image")]
+            public IFormFile Image { get; set; }
 
             [Required]
             [EmailAddress]
@@ -106,8 +104,17 @@ namespace ShadowBlog.Areas.Identity.Pages.Account
                     Email = Input.Email,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
-                    DisplayName = Input.DisplayName
+                    DisplayName = Input.DisplayName,
+                    ImageData = await _imageService.EncodeImageAsync("defaultUser.png"),
+                    ImageType = "png"
                 };
+
+                //If and only if the user chose a custom image will we overwrite the default image
+                if (Input.Image is not null)
+                {
+                    user.ImageData = await _imageService.EncodeImageAsync(Input.Image);
+                    user.ImageType = _imageService.ContentType(Input.Image);
+                }
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)

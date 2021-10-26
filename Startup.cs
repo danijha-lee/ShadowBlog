@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,6 +10,11 @@ using Microsoft.Extensions.Hosting;
 using ShadowBlog.Data;
 using ShadowBlog.Models;
 using ShadowBlog.Services;
+using ShadowBlog.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ShadowBlog
 {
@@ -32,16 +33,21 @@ namespace ShadowBlog
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
                     ConnectionService.GetConnectionString(Configuration)));
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-               .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddControllersWithViews();
 
+            //Register the DataService...
             services.AddTransient<DataService>();
+
+            //Register the BasicImageService as the concrete class for the IImageService interface
+            services.AddScoped<IImageService, BasicImageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

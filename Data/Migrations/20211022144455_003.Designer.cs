@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ShadowBlog.Data;
@@ -9,9 +10,10 @@ using ShadowBlog.Data;
 namespace ShadowBlog.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211022144455_003")]
+    partial class _003
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,9 +158,6 @@ namespace ShadowBlog.Data.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("ContentType")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
 
@@ -166,9 +165,6 @@ namespace ShadowBlog.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
-
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("bytea");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -188,36 +184,19 @@ namespace ShadowBlog.Data.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Abstract")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("text");
 
                     b.Property<int>("BlogId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("ImageType")
-                        .HasColumnType("text");
-
-                    b.Property<int>("ReadyStatus")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Slug")
-                        .HasColumnType("text");
-
                     b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("timestamp without time zone");
@@ -242,8 +221,9 @@ namespace ShadowBlog.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("DisplayName")
-                        .HasMaxLength(60)
-                        .HasColumnType("character varying(60)");
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -256,12 +236,6 @@ namespace ShadowBlog.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)");
-
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("ImageType")
-                        .HasColumnType("text");
 
                     b.Property<string>("LastName")
                         .IsRequired()
