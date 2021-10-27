@@ -15,12 +15,15 @@ namespace ShadowBlog.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IImageService _imageService;
+        private readonly ISlugService _slugService;
 
         public BlogPostsController(ApplicationDbContext context,
-                                     IImageService imageService)
+                                     IImageService imageService,
+                                     ISlugService slugService)
         {
             _context = context;
             _imageService = imageService;
+            _slugService = slugService;
         }
 
         public async Task<IActionResult> ChildIndex(int blogId)
@@ -92,6 +95,18 @@ namespace ShadowBlog.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Creating and checking for slug uniqueness
+                var slug = _slugService.UrlFriendly(blogPost.Title);
+                if (!_slugService.IsUnique(slug))
+                {
+                    ModelState.AddModelError("Title", $"Please use a different Title that has already been used.");
+                    return View(blogPost);
+                }
+                else
+                {
+                    blogPost.Slug = slug;
+                }
+
                 //Either record the incomming image or user the default image
                 if (blogPost.Image is not null)
                 {
