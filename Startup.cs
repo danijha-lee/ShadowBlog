@@ -48,7 +48,6 @@ namespace ShadowBlog
 
             //Register the BasicImageService as the concrete class for the IImageService interface
             services.AddScoped<IImageService, BasicImageService>();
-
             services.AddTransient<ISlugService, BasicSlugService>();
         }
 

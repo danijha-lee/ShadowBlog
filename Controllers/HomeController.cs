@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ShadowBlog.Data;
 using ShadowBlog.Models;
+using ShadowBlog.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,15 +15,31 @@ namespace ShadowBlog.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,
+                                ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            PostCardsViewModel newestCards = new()
+            {
+                MainCard = await _context.Blogs.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
+                SideCards = await _context.Blogs.OrderByDescending(b => b.Created).Skip(1).Take(4).ToListAsync()
+            };
+            HomeIndexViewModel blogsvm = new()
+            {
+                Blogs = await _context.Blogs.ToListAsync(),
+                MostRecentBlog = await _context.Blogs.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
+                MostRecentPost = await _context.BlogPosts.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
+                NewestCards = newestCards,
+            };
+
+            return View(blogsvm);
         }
 
         public IActionResult Privacy()

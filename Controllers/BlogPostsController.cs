@@ -8,6 +8,7 @@ using ShadowBlog.Data;
 using ShadowBlog.Models;
 using ShadowBlog.Services.Interfaces;
 using ShadowBlog.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShadowBlog.Controllers
 {
@@ -17,9 +18,7 @@ namespace ShadowBlog.Controllers
         private readonly IImageService _imageService;
         private readonly ISlugService _slugService;
 
-        public BlogPostsController(ApplicationDbContext context,
-                                     IImageService imageService,
-                                     ISlugService slugService)
+        public BlogPostsController(ApplicationDbContext context, IImageService imageService, ISlugService slugService)
         {
             _context = context;
             _imageService = imageService;
@@ -28,23 +27,36 @@ namespace ShadowBlog.Controllers
 
         public async Task<IActionResult> ChildIndex(int blogId)
         {
-            //I dont want to get all of the blog posts
-            //I want to get all of the blog posts where the BlogId = blogId
-            //Also, I only want to grab production ready BlogPosts
-
+            //I don't want to get all of the BlogPosts....
+            //I want to get all of the BlogPosts where the BlogId = blogId
+            //Also...I only want to grab production ready BlogPosts
             var blogPosts = _context.BlogPosts
                 .Include(b => b.Blog)
                 .Where(b => b.BlogId == blogId && b.ReadyStatus == ReadyState.ProductionReady)
                 .OrderByDescending(b => b.Created);
 
-            return View("Index", await blogPosts.ToListAsync());
+            return View(await blogPosts.ToListAsync());
         }
 
         // GET: BlogPosts
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.BlogPosts.Include(b => b.Blog);
+            var applicationDbContext = _context.BlogPosts
+                .Include(b => b.Blog)
+                .Where(b => b.ReadyStatus == ReadyState.ProductionReady)
+                .OrderByDescending(b => b.Created);
+
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> Preview()
+        {
+            var blogPosts = _context.BlogPosts
+               .Include(b => b.Blog)
+               .Where(b => b.ReadyStatus == ReadyState.InPreview)
+               .OrderByDescending(b => b.Created);
+
+            return View("Index", await blogPosts.ToListAsync());
         }
 
         // GET: BlogPosts/Details/5
@@ -67,19 +79,16 @@ namespace ShadowBlog.Controllers
         }
 
         // GET: BlogPosts/Create
+        //[Authorize(Roles ="Administrator")]
         public IActionResult Create(int? blogId)
         {
-            //If I am given an id
-            //1. It represents the BlogPost.BlogId
-            //2. I dont show the select list  to the user (If i already have the blog id
-            //3. I embed the incoming id into the form somehow that it is treated as
-
             if (blogId is not null)
             {
                 BlogPost newBlogPost = new()
                 {
-                    BlogId = (int)blogId,
+                    BlogId = (int)blogId
                 };
+
                 return View(newBlogPost);
             }
 
@@ -88,18 +97,20 @@ namespace ShadowBlog.Controllers
         }
 
         // POST: BlogPosts/Create
-
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BlogId,Title,Abstract,Content,ReadyStatus,Image")] BlogPost blogPost)
         {
             if (ModelState.IsValid)
             {
-                //Creating and checking for slug uniqueness
+                //Let's create and check the slug for uniqueness
                 var slug = _slugService.UrlFriendly(blogPost.Title);
                 if (!_slugService.IsUnique(slug))
                 {
-                    ModelState.AddModelError("Title", $"Please use a different Title that has already been used.");
+                    //Create a custom Model Error and complain to the user
+                    ModelState.AddModelError("Title", "Error: Title has already been used.");
                     return View(blogPost);
                 }
                 else
@@ -107,7 +118,7 @@ namespace ShadowBlog.Controllers
                     blogPost.Slug = slug;
                 }
 
-                //Either record the incomming image or user the default image
+                //Either record the incoming image or use the default image
                 if (blogPost.Image is not null)
                 {
                     if (!_imageService.ValidImage(blogPost.Image))
@@ -124,10 +135,13 @@ namespace ShadowBlog.Controllers
                 else
                 {
                     blogPost.ImageData = await _imageService.EncodeImageAsync("blogPostDefaultImage.png");
-                    blogPost.ImageType = "png";
+                    blogPost.ImageType = "jpg";
                 }
 
                 blogPost.Created = DateTime.Now;
+
+                //TODO: Add code in here to generate the Slug from the Title
+
                 _context.Add(blogPost);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -137,6 +151,7 @@ namespace ShadowBlog.Controllers
         }
 
         // GET: BlogPosts/Edit/5
+        //[Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -158,7 +173,7 @@ namespace ShadowBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,Created,Updated,ReadyStatus,Slug,ImageData,ImageType")] BlogPost blogPost)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,Created,ReadyStatus,Slug,ImageData,ImageType,Image")] BlogPost blogPost)
         {
             if (id != blogPost.Id)
             {
@@ -169,6 +184,23 @@ namespace ShadowBlog.Controllers
             {
                 try
                 {
+                    //In the Edit we have to make sure that the Title actually changed before checking slug uniqueness
+                    var slug = _slugService.UrlFriendly(blogPost.Title);
+                    if (slug != blogPost.Slug)
+                    {
+                        if (!_slugService.IsUnique(slug))
+                        {
+                            //Create a custom Model Error and complain to the user
+                            ModelState.AddModelError("Title", "Error: Title has already been used.");
+                            return View(blogPost);
+                        }
+                        else
+                        {
+                            blogPost.Slug = slug;
+                        }
+                    }
+
+                    blogPost.Updated = DateTime.Now;
                     _context.Update(blogPost);
                     await _context.SaveChangesAsync();
                 }
@@ -190,6 +222,7 @@ namespace ShadowBlog.Controllers
         }
 
         // GET: BlogPosts/Delete/5
+        //[Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

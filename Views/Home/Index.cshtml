@@ -1,8 +1,463 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model ShadowBlog.ViewModels.HomeIndexViewModel
+@using ShadowBlog.Services.Interfaces
+@inject IImageService _imageService 
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<section class="main-banner-wrap dark-overlay2 bg-common" data-bg-image="img/pexels-pixabay-163036.jpg">
+    <div class="container">      
+        <div class="row gutters-2">
+            <div class="col-lg-6">
+                <div class="post-grid-layout3 post-grid14">
+                    <div class="post-img">
+                        <img src="@_imageService.DecodeImage(Model.NewestCards.MainCard.ImageData, Model.NewestCards.MainCard.ContentType)" width="635" height="518" alt="Games">
+                    </div>
+                    <div class="post-content">
+                        <div class="item-category bg-green">@Model.NewestCards.MainCard.Name</div>
+                        <div class="post-date"><i class="flaticon-clock"></i> @Model.NewestCards.MainCard.Created.ToString("dd MMMM, yyyy")</div>
+                        <h2 class="post-title"><a href="single-post1.html">@Model.NewestCards.MainCard.Description</a></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row gutters-2">
+                    <div class="col-sm-6">
+                        @foreach (Blog blog in Model.NewestCards.SideCards.Take(2))
+                        {
+                            <div class="post-grid-layout3 post-grid13">
+                                <div class="post-img">
+                                    <img src="@_imageService.DecodeImage(blog.ImageData, blog.ContentType)" class="img-fluid" alt="Games">
+                                </div>
+                                <div class="post-content">
+                                    <div class="item-category bg-green">@blog.Name</div>
+                                    <div class="post-date"><i class="flaticon-clock"></i>@blog.Created.ToString("dd MMMM, yyyy")</div>
+                                    <h3 class="post-title"><a href="single-post1.html">@blog.Description</a></h3>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                    <div class="col-sm-6">
+                        @foreach (Blog blog in Model.NewestCards.SideCards.Skip(2).Take(2))
+                        {
+                            <div class="post-grid-layout3 post-grid13">
+                                <div class="post-img">
+                                    <img src="@_imageService.DecodeImage(blog.ImageData, blog.ContentType)" class="img-fluid" alt="Games">
+                                </div>
+                                <div class="post-content">
+                                    <div class="item-category bg-green">@blog.Name</div>
+                                    <div class="post-date"><i class="flaticon-clock"></i>@blog.Created.ToString("dd MMMM, yyyy")</div>
+                                    <h3 class="post-title"><a href="single-post1.html">@blog.Description</a></h3>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+<!--=====================================-->
+<!--=           Post Start        		=-->
+<!--=====================================-->
+<section class="post-wrap-layout9">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="heading-layout1">
+                    <h2 class="heading-title">New Games</h2>
+                    <div class="heading-icon">
+                        <a href="#" class="active"><i class="flaticon-left-arrow-1"></i></a>
+                        <a href="#"><i class="flaticon-right-arrow"></i></a>
+                    </div>
+                </div>
+                <div class="row gutters-10">
+                    <div class="col-lg-5">
+                        <div class="post-grid-layout3 post-grid14 mb-2">
+                            <div class="post-img">
+                                <img src="media/post/post43.jpg" alt="Games">
+                            </div>
+                            <div class="post-content">
+                                <div class="item-category bg-orange">Mission</div>
+                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                <h3 class="post-title"><a href="single-post1.html">Top 10 Best Computer games Markting here.</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="row gutters-10">
+                            <div class="col-sm-6">
+                                <div class="post-grid-layout3 post-grid13">
+                                    <div class="post-img">
+                                        <img src="media/post/post44.jpg" alt="Games">
+                                    </div>
+                                    <div class="post-content">
+                                        <div class="item-category bg-green">Action</div>
+                                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                        <h3 class="post-title"><a href="single-post1.html">Game are Computery in the market.</a></h3>
+                                    </div>
+                                </div>
+                                <div class="post-grid-layout3 post-grid13">
+                                    <div class="post-img">
+                                        <img src="media/post/post45.jpg" alt="Games">
+                                    </div>
+                                    <div class="post-content">
+                                        <div class="item-category bg-dark-pink">War</div>
+                                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                        <h3 class="post-title"><a href="single-post1.html">Hitlist ast Computery in the market.</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="post-grid-layout3 post-grid13">
+                                    <div class="post-img">
+                                        <img src="media/post/post46.jpg" alt="Games">
+                                    </div>
+                                    <div class="post-content">
+                                        <div class="item-category bg-dodger-blue">Animation</div>
+                                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                        <h3 class="post-title"><a href="single-post1.html">Game are Computery in the market.</a></h3>
+                                    </div>
+                                </div>
+                                <div class="post-grid-layout3 post-grid13">
+                                    <div class="post-img">
+                                        <img src="media/post/post47.jpg" alt="Games">
+                                    </div>
+                                    <div class="post-content">
+                                        <div class="item-category bg-dribble">Movie</div>
+                                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                        <h3 class="post-title"><a href="single-post1.html">Hitlist ast Computery in the market.</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 sidebar-widget-md">
+                <div class="widget widget-social">
+                    <div class="heading-layout1">
+                        <h2 class="heading-title">Follow Us On</h2>
+                    </div>
+                    <div class="social-box">
+                        <div class="media">
+                            <div class="item-icon bg-fb">
+                                <i class="fab fa-facebook-f"></i>
+                            </div>
+                            <div class="media-body bg-fb2">
+                                <div class="item-title text-white">Followers</div>
+                                <div class="follower-number text-white">10,555</div>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="item-icon bg-twitter">
+                                <i class="fab fa-twitter"></i>
+                            </div>
+                            <div class="media-body bg-twitter2">
+                                <div class="item-title text-white">Followers</div>
+                                <div class="follower-number text-white">19,555</div>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="item-icon bg-google-plus">
+                                <i class="fab fa-google-plus-g"></i>
+                            </div>
+                            <div class="media-body bg-google-plus2">
+                                <div class="item-title text-white">Followers</div>
+                                <div class="follower-number text-white">9,369</div>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="item-icon bg-dribble">
+                                <i class="fab fa-dribbble"></i>
+                            </div>
+                            <div class="media-body bg-dribble2">
+                                <div class="item-title text-white">Followers</div>
+                                <div class="follower-number text-white">11,599</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget widget-ad">
+                    <a href="#">
+                        <img src="media/figure/ad3.jpg" alt="Ad">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--=====================================-->
+<!--=           Post Start        		=-->
+<!--=====================================-->
+<section class="post-wrap-layout8">
+    <div class="container">
+        <div class="heading-layout1">
+            <h2 class="heading-title">All Latest Games</h2>
+            <div class="heading-icon">
+                <a href="#" class="active"><i class="flaticon-left-arrow-1"></i></a>
+                <a href="#"><i class="flaticon-right-arrow"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="post-grid-layout2">
+                    <div class="item-img">
+                        <img src="media/post/post42.jpg" alt="Post">
+                    </div>
+                    <div class="item-content">
+                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                        <h3 class="post-title"><a href="single-post1.html">My microwave is too small to fit the microy wave pcoappy sunday software.</a></h3>
+                        <p>Stay focused and remember we design stay focused area aaend remember we design the best wordPrss he ones closest to you tha best.</p>
+                        <div class="post-meta-dark">
+                            <ul>
+                                <li class="post-author">
+                                    <div class="author-icon bg-blueviolet">
+                                        <i class="flaticon-user"></i>
+                                    </div>
+                                    <div class="author-content">
+                                        <div class="item-text">Posted by</div>
+                                        <div class="author-name"><a href="#">Steven Jones</a></div>
+                                    </div>
+                                </li>
+                                <li class="meta-action"><i class="flaticon-heart"></i>2,350</li>
+                                <li class="meta-action"><i class="flaticon-comment-white-oval-bubble"></i>1,380</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="post-grid-layout2 post-grid12">
+                            <div class="item-img">
+                                <img src="media/post/post33.jpg" alt="Post">
+                                <div class="item-category bg-amaranth">Racing</div>
+                            </div>
+                            <div class="item-content">
+                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                <h3 class="post-title"><a href="single-post1.html">Best Skin Concept Gloria Area they know United.</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="post-grid-layout2 post-grid12">
+                            <div class="item-img">
+                                <img src="media/post/post34.jpg" alt="Post">
+                                <div class="item-category bg-orange">Adventure</div>
+                            </div>
+                            <div class="item-content">
+                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                <h3 class="post-title"><a href="single-post1.html">We Can’t Wait to Try Thes Area e Makeup Trends.</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="post-grid-layout2 post-grid12">
+                            <div class="item-img">
+                                <img src="media/post/post35.jpg" alt="Post">
+                                <div class="item-category bg-green">Action</div>
+                            </div>
+                            <div class="item-content">
+                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                <h3 class="post-title"><a href="single-post1.html">Best Skin Concept Gloria Area they know United.</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="post-grid-layout2 post-grid12">
+                            <div class="item-img">
+                                <img src="media/post/post36.jpg" alt="Post">
+                                <div class="item-category bg-dodger-blue">Animation</div>
+                            </div>
+                            <div class="item-content">
+                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                <h3 class="post-title"><a href="single-post1.html">We Can’t Wait to Try Thes Area e Makeup Trends.</a></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--=====================================-->
+<!--=           Ad Banner Start        	=-->
+<!--=====================================-->
+<div class="ad-banner-layout1 margin-bottom-40">
+    <div class="container">
+        <a href="#">
+            <img src="media/figure/ad6.jpg" alt="Ad">
+        </a>
+    </div>
 </div>
+<!--=====================================-->
+<!--=            Video Post Start     	=-->
+<!--=====================================-->
+<section class="post-wrap-layout7">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="post-grid-layout1 post-grid9">
+                    <div class="post-img">
+                        <img src="media/post/post41.jpg" alt="Post">
+                        <div class="popup-video">
+                            <a class="play-btn popup-youtube" href="http://www.youtube.com/watch?v=1iIZeIy7TqM">
+                                <i class="fas fa-play"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-category bg-blueviolet">Racing</div>
+                        <h3 class="post-title"><a href="single-post1.html">Swiss Chard and Lamb Torte With Fennel Nation Pomegranate Relish</a></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="post-list-layout1 post-list5">
+                    <div class="media">
+                        <div class="item-img">
+                            <img src="media/post/post2.jpg" alt="Post">
+                        </div>
+                        <div class="media-body">
+                            <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                            <h4 class="post-title"><a href="single-post1.html">The Top Best Computer Speakers Market</a></h4>
+                        </div>
+                    </div>
+                    <div class="media">
+                        <div class="item-img">
+                            <img src="media/post/post3.jpg" alt="Post">
+                        </div>
+                        <div class="media-body">
+                            <div class="post-date"><i class="flaticon-clock"></i> 25 June, 2019</div>
+                            <h4 class="post-title"><a href="single-post1.html">The Top Best Computer Speakers Market</a></h4>
+                        </div>
+                    </div>
+                    <div class="media">
+                        <div class="item-img">
+                            <img src="media/post/post4.jpg" alt="Post">
+                        </div>
+                        <div class="media-body">
+                            <div class="post-date"><i class="flaticon-clock"></i> 20 June, 2019</div>
+                            <h4 class="post-title"><a href="single-post1.html">The Top Best Computer Speakers Market</a></h4>
+                        </div>
+                    </div>
+                    <div class="media">
+                        <div class="item-img">
+                            <img src="media/post/post3.jpg" alt="Post">
+                        </div>
+                        <div class="media-body">
+                            <div class="post-date"><i class="flaticon-clock"></i> 25 June, 2019</div>
+                            <h4 class="post-title"><a href="single-post1.html">The Top Best Computer Speakers Market</a></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--=====================================-->
+<!--=            Post Start           =-->
+<!--=====================================-->
+<section class="margin-bottom-30">
+    <div class="container">
+        <div class="heading-layout1">
+            <h2 class="heading-title">Most Viewed Games</h2>
+            <div class="heading-icon">
+                <a href="#" class="active"><i class="flaticon-left-arrow-1"></i></a>
+                <a href="#"><i class="flaticon-right-arrow"></i></a>
+            </div>
+        </div>
+        <div class="row gutters-1">
+            <div class="col-lg-3 col-sm-6">
+                <div class="post-grid-layout2 post-grid10">
+                    <div class="item-img">
+                        <img src="media/post/post33.jpg" alt="Post">
+                        <div class="item-category bg-amaranth">Racing</div>
+                    </div>
+                    <div class="item-content">
+                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                        <h3 class="post-title"><a href="single-post1.html">Top 10 Best Computea ety kers in the Markting games here 2018 games.</a></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="post-grid-layout2 post-grid10">
+                    <div class="item-img">
+                        <img src="media/post/post34.jpg" alt="Post">
+                        <div class="item-category bg-orange">Adventure</div>
+                    </div>
+                    <div class="item-content">
+                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                        <h3 class="post-title"><a href="single-post1.html">Top 10 Best Computea ety kers in the Markting games here 2018 games.</a></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="post-grid-layout2 post-grid10">
+                    <div class="item-img">
+                        <img src="media/post/post35.jpg" alt="Post">
+                        <div class="item-category bg-green">Action</div>
+                    </div>
+                    <div class="item-content">
+                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                        <h3 class="post-title"><a href="single-post1.html">Top 10 Best Computea ety kers in the Markting games here 2018 games.</a></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="post-grid-layout2 post-grid10">
+                    <div class="item-img">
+                        <img src="media/post/post36.jpg" alt="Post">
+                        <div class="item-category bg-dodger-blue">Animation</div>
+                    </div>
+                    <div class="item-content">
+                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                        <h3 class="post-title"><a href="single-post1.html">Top 10 Best Computea ety kers in the Markting games here 2018 games.</a></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--=====================================-->
+<!--=            Social Start           =-->
+<!--=====================================-->
+<section class="social-box-wrap">
+    <div class="container-fluid full-width">
+        <div class="row no-gutters">
+            <div class="col-lg-2 col-sm-4 col-6">
+                <div class="social-box-img">
+                    <a href="#"><img src="media/social/social1.png" alt="Social"></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-6">
+                <div class="social-box-img">
+                    <a href="#"><img src="media/social/social2.png" alt="Social"></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-6">
+                <div class="social-box-img">
+                    <a href="#"><img src="media/social/social3.png" alt="Social"></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-6">
+                <div class="social-box-img">
+                    <a href="#"><img src="media/social/social4.png" alt="Social"></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-6">
+                <div class="social-box-img">
+                    <a href="#"><img src="media/social/social5.png" alt="Social"></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-4 col-6">
+                <div class="social-box-img">
+                    <a href="#"><img src="media/social/social6.png" alt="Social"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
