@@ -87,32 +87,31 @@
                                     </li>
                                     <li>
                                         <a asp-action="Index" asp-controller="Blogs">BLOGS</a>
-                                        @if (User.IsInRole("Administrator"))
-                                        {
+                                      
                                         <ul class="dropdown-menu-col-1">
                                             <li>
-                                                <a asp-action="Create" asp-controller="Blogs">Add New Blog Post</a>
+                                                <a asp-action="Create" asp-controller="Blogs">Add New Blog</a>
                                             </li>
                                             <li>
                                                 <a asp-action="Index" asp-controller="Blogs">Manage Blogs</a>
                                             </li>
                                            
                                         </ul>
-                                        }
+                                        
                                     </li>
                                  
                                     <li>
-                                        <a asp-action="ChildIndex" asp-controller="BlogPosts">BLOG POSTS</a>
-                                        @if (User.IsInRole("Administrator")){                                       
+                                        <a asp-action="Index" asp-controller="BlogPosts">BLOG POSTS</a>
+                                                                             
                                          <ul class="dropdown-menu-col-1">
                                             <li>
                                                 <a asp-action="Create" asp-controller="BlogPosts">Add New Blog Post</a>
                                             </li>
                                             <li>
-                                                <a asp-action="ChildIndex" asp-controller="BlogPosts">Manage Blog Posts</a>
+                                                <a asp-action="Index" asp-controller="BlogPosts">Manage Blog Posts</a>
                                             </li>
                                         </ul>
-                                          }
+                                        
                                     </li>
                                     <li>
                                         <a>PAGES</a>
@@ -146,6 +145,7 @@
                                             <span></span>
                                         </button>
                                     </li>
+                                    <partial name="_LoginPartial" />
                                 </ul>
                             </div>
                         </div>

@@ -10,5 +10,8 @@ namespace ShadowBlog.ViewModels
     {
         public Blog MainCard { get; set; }
         public List<Blog> SideCards { get; set; }
+
+        public BlogPost MainPostCard { get; set; }
+        public List<BlogPost> SidePostCards { get; set; }
     }
 }

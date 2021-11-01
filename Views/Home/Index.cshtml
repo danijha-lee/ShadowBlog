@@ -1,10 +1,9 @@
 ﻿@model ShadowBlog.ViewModels.HomeIndexViewModel
 @using ShadowBlog.Services.Interfaces
-@inject IImageService _imageService 
-
+@inject IImageService _imageService
 
 <section class="main-banner-wrap dark-overlay2 bg-common" data-bg-image="img/pexels-pixabay-163036.jpg">
-    <div class="container">      
+    <div class="container">
         <div class="row gutters-2">
             <div class="col-lg-6">
                 <div class="post-grid-layout3 post-grid14">
@@ -14,7 +13,7 @@
                     <div class="post-content">
                         <div class="item-category bg-green">@Model.NewestCards.MainCard.Name</div>
                         <div class="post-date"><i class="flaticon-clock"></i> @Model.NewestCards.MainCard.Created.ToString("dd MMMM, yyyy")</div>
-                        <h2 class="post-title"><a href="single-post1.html">@Model.NewestCards.MainCard.Description</a></h2>
+                        <h2 class="post-title"><a asp-action="ChildIndex" asp-controller="BlogPosts" asp-route-blogId="@Model.NewestCards.MainCard.Id">@Model.NewestCards.MainCard.Description</a></h2>
                     </div>
                 </div>
             </div>
@@ -30,7 +29,7 @@
                                 <div class="post-content">
                                     <div class="item-category bg-green">@blog.Name</div>
                                     <div class="post-date"><i class="flaticon-clock"></i>@blog.Created.ToString("dd MMMM, yyyy")</div>
-                                    <h3 class="post-title"><a href="single-post1.html">@blog.Description</a></h3>
+                                    <h3 class="post-title"><a asp-action="ChildIndex" asp-controller="BlogPosts" asp-route-blogId="@blog.Id">@blog.Description</a></h3>
                                 </div>
                             </div>
 
@@ -46,7 +45,7 @@
                                 <div class="post-content">
                                     <div class="item-category bg-green">@blog.Name</div>
                                     <div class="post-date"><i class="flaticon-clock"></i>@blog.Created.ToString("dd MMMM, yyyy")</div>
-                                    <h3 class="post-title"><a href="single-post1.html">@blog.Description</a></h3>
+                                    <h3 class="post-title"><a asp-action="ChildIndex" asp-controller="BlogPosts" asp-route-blogId="@blog.Id">@blog.Description</a></h3>
                                 </div>
                             </div>
 
@@ -54,7 +53,6 @@
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 </section>
@@ -66,9 +64,9 @@
         <div class="row">
             <div class="col-lg-9">
                 <div class="heading-layout1">
-                    <h2 class="heading-title">New Games</h2>
+                    <h2 class="heading-title">Newest Blog Posts</h2>
                     <div class="heading-icon">
-                        <a href="#" class="active"><i class="flaticon-left-arrow-1"></i></a>
+                        <a href="#" class="active"><i class="flaticon-left-arrow-1 bs-tooltip" title="Back to the top"></i></a>
                         <a href="#"><i class="flaticon-right-arrow"></i></a>
                     </div>
                 </div>
@@ -76,12 +74,12 @@
                     <div class="col-lg-5">
                         <div class="post-grid-layout3 post-grid14 mb-2">
                             <div class="post-img">
-                                <img src="media/post/post43.jpg" alt="Games">
+                                <img class="img-fluid" src="@_imageService.DecodeImage(Model.NewestCards.MainPostCard.ImageData, Model.NewestCards.MainPostCard.ImageType)" alt="Post Photo">
                             </div>
                             <div class="post-content">
-                                <div class="item-category bg-orange">Mission</div>
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h3 class="post-title"><a href="single-post1.html">Top 10 Best Computer games Markting here.</a></h3>
+                                <div class="item-category bg-orange">@Model.NewestCards.MainPostCard.Blog.Name</div>
+                                <div class="post-date"><i class="flaticon-clock"></i> @Model.NewestCards.MainPostCard.Created.ToString("dd MMMM, yyyy")</div>
+                                <h3 class="post-title"><a asp-action="Details" asp-route-id="@Model.NewestCards.MainPostCard.Id">@Model.NewestCards.MainPostCard.Title</a></h3>
                             </div>
                         </div>
                     </div>
@@ -89,46 +87,32 @@
                         <div class="row gutters-10">
                             <div class="col-sm-6">
                                 <div class="post-grid-layout3 post-grid13">
-                                    <div class="post-img">
-                                        <img src="media/post/post44.jpg" alt="Games">
-                                    </div>
-                                    <div class="post-content">
-                                        <div class="item-category bg-green">Action</div>
-                                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                        <h3 class="post-title"><a href="single-post1.html">Game are Computery in the market.</a></h3>
-                                    </div>
-                                </div>
-                                <div class="post-grid-layout3 post-grid13">
-                                    <div class="post-img">
-                                        <img src="media/post/post45.jpg" alt="Games">
-                                    </div>
-                                    <div class="post-content">
-                                        <div class="item-category bg-dark-pink">War</div>
-                                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                        <h3 class="post-title"><a href="single-post1.html">Hitlist ast Computery in the market.</a></h3>
-                                    </div>
+                                    @foreach (BlogPost blogPost in Model.NewestCards.SidePostCards.Take(2))
+                                    {
+                                        <div class="post-img">
+                                            <img src="@_imageService.DecodeImage(blogPost.ImageData, blogPost.ImageType)" alt="Games">
+                                        </div>
+                                        <div class="post-content">
+                                            <div class="item-category bg-green">@blogPost.Blog.Name</div>
+                                            <div class="post-date"><i class="flaticon-clock"></i>@blogPost.Created.ToString("dd MMMM, yyyy")</div>
+                                            <h3 class="post-title"><a href="single-post1.html">@blogPost.Title</a></h3>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="post-grid-layout3 post-grid13">
-                                    <div class="post-img">
-                                        <img src="media/post/post46.jpg" alt="Games">
-                                    </div>
-                                    <div class="post-content">
-                                        <div class="item-category bg-dodger-blue">Animation</div>
-                                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                        <h3 class="post-title"><a href="single-post1.html">Game are Computery in the market.</a></h3>
-                                    </div>
-                                </div>
-                                <div class="post-grid-layout3 post-grid13">
-                                    <div class="post-img">
-                                        <img src="media/post/post47.jpg" alt="Games">
-                                    </div>
-                                    <div class="post-content">
-                                        <div class="item-category bg-dribble">Movie</div>
-                                        <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                        <h3 class="post-title"><a href="single-post1.html">Hitlist ast Computery in the market.</a></h3>
-                                    </div>
+                                    @foreach (BlogPost blogPost in Model.NewestCards.SidePostCards.Skip(2).Take(2))
+                                    {
+                                        <div class="post-img">
+                                            <img src="@_imageService.DecodeImage(blogPost.ImageData, blogPost.ImageType)" alt="Games">
+                                        </div>
+                                        <div class="post-content">
+                                            <div class="item-category bg-green">@blogPost.Blog.Name</div>
+                                            <div class="post-date"><i class="flaticon-clock"></i>@blogPost.Created.ToString("dd MMMM, yyyy")</div>
+                                            <h3 class="post-title"><a href="single-post1.html">@blogPost.Title</a></h3>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -302,7 +286,7 @@
             <div class="col-lg-8">
                 <div class="post-grid-layout1 post-grid9">
                     <div class="post-img">
-                        <img src="media/post/post41.jpg" alt="Post">
+                        <img src="~/img/pexels-pixabay-163036.jpg" alt="Post">
                         <div class="popup-video">
                             <a class="play-btn popup-youtube" href="http://www.youtube.com/watch?v=1iIZeIy7TqM">
                                 <i class="fas fa-play"></i>

@@ -1,8 +1,12 @@
-﻿@model IEnumerable<ShadowBlog.Models.BlogPost>
+﻿@using ShadowBlog.Models
+@model IEnumerable<BlogPost>
+
 @using ShadowBlog.Services.Interfaces
 @inject IImageService _imageService
+
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Home Page";
 }
 <!--=====================================-->
 <!--=           Category Start        	=-->
@@ -32,29 +36,32 @@
 <!--=====================================-->
 <section class="inner-section">
     <div class="container">
-        <div class="row">
-            <div class="col-xl-9">
-                @foreach (var item in Model)
+        <div class="row gutters-40">
+            <div class="col-xl-9 col-lg-8">
+                @foreach (BlogPost blogPost in Model)
                 {
-                    <div class="post-list-layout3 align-items-center">
-                        <div class="item-img">
-                            <img src="@_imageService.DecodeImage(item.ImageData, item.ImageType)" alt="Post Image">
-                            <div class="item-tag bg-blueviolet">@item.Blog.Name</div>
-                        </div>
-                        <div class="item-content">
-                            <div class="post-meta">
-                                <ul>
-                                    <li><i class="flaticon-clock"></i>@item.Created.ToString("dd MMMM, yyyy")</li>
-                                    <li class="item-author"><i class="flaticon-user bg-green"></i><span>By</span><a asp-action="AboutMe" asp-controller="Home">Monae Lee</a></li>
-                                </ul>
-                            </div>
-                            <h3 class="item-title"><a href="#"> @item.Title</a></h3>
-                            <p>@item.Abstract</p>
-                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-id="@item.Id" class="btn-fill-md">READ POST</a>
-                        </div>
+                <div class="post-list-layout3 post-list6">
+                    <div class="item-img">
+                        <img src="@_imageService.DecodeImage(blogPost.ImageData, blogPost.ImageType)" alt="Post Image">
                     </div>
+                    <div class="item-content">
+                        <div class="item-tag bg-green">@blogPost.Blog.Name</div>
+                        <div class="post-meta">
+                            <ul>
+                                <li><i class="flaticon-clock"></i> @blogPost.Created.ToString("dd MMMM, yyyy")</li>
+                                <li class="item-author"><i class="flaticon-user bg-blueviolet"></i><span>By</span><a href="#">Monae Lee</a></li>
+                            </ul>
+                        </div>
+                        <h2 class="item-title"><a href="#">@blogPost.Abstract</a></h2>
+                        <p>
+                            Bhen an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only
+                            five centuri but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the
+                            with the release of Letraset sheets .
+                        </p>
+                        <a asp-action="Details" asp-controller="BlogPosts" asp-route-id="@blogPost.Id" class="btn-fill-md">READ MORE</a>
+                    </div>
+                </div>
                 }
-
 
                 <div class="pagination-layout1">
                     <ul>
@@ -65,7 +72,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-xl-3 sidebar-widget-xl">
+            <div class="col-xl-3 col-lg-4 sidebar-widget">
                 <div class="widget widget-search">
                     <div class="input-group stylish-input-group">
                         <input type="text" class="form-control" placeholder="Search Story . . .">
@@ -176,6 +183,85 @@
                         <img src="media/figure/ad3.jpg" alt="Ad">
                     </a>
                 </div>
+                <div class="widget widget-most-viewed">
+                    <div class="heading-layout1">
+                        <h3 class="heading-title">Most Viewed</h3>
+                    </div>
+                    <div class="grid-post">
+                        <div class="item-img">
+                            <img src="media/post/post28.jpg" alt="Post">
+                            <div class="item-tag bg-light">Scoccer</div>
+                        </div>
+                        <div class="item-content">
+                            <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                            <h3 class="post-title"><a href="single-post1.html">Top 10 Best Computer games Speakers in the Market</a></h3>
+                        </div>
+                    </div>
+                    <div class="list-post">
+                        <div class="media">
+                            <div class="item-img">
+                                <img src="media/post/post7.jpg" alt="Post">
+                            </div>
+                            <div class="media-body">
+                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="item-img">
+                                <img src="media/post/post8.jpg" alt="Post">
+                            </div>
+                            <div class="media-body">
+                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="item-img">
+                                <img src="media/post/post9.jpg" alt="Post">
+                            </div>
+                            <div class="media-body">
+                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="item-img">
+                                <img src="media/post/post10.jpg" alt="Post">
+                            </div>
+                            <div class="media-body">
+                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
+                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="view-all-btn"><i class="flaticon-right-arrow"></i>View All Post</a>
+                </div>
+                <div class="widget widget-archive">
+                    <div class="heading-layout1">
+                        <h3 class="heading-title">Archives</h3>
+                    </div>
+                    <ul class="archive-list">
+                        <li>
+                            <a href="#">April 2017<span>(12)</span></a>
+                        </li>
+                        <li>
+                            <a href="#">March 2017<span>(4)</span></a>
+                        </li>
+                        <li>
+                            <a href="#">February 2017 <span>(11)</span></a>
+                        </li>
+                        <li>
+                            <a href="#">April 2015<span>(79)</span></a>
+                        </li>
+                        <li>
+                            <a href="#">March 2015<span>(4)</span></a>
+                        </li>
+                        <li>
+                            <a href="#">February 2015<span>(11)</span></a>
+                        </li>
+                    </ul>
+                </div>
                 <div class="widget widget-newsletter">
                     <h3 class="item-title">Subscribe <span>Newsletter</span></h3>
                     <div class="item-subtitle">Get Latest Updates</div>
@@ -194,4 +280,4 @@
             </div>
         </div>
     </div>
-</section></table>
+</section>

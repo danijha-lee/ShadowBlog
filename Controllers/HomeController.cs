@@ -29,17 +29,30 @@ namespace ShadowBlog.Controllers
             PostCardsViewModel newestCards = new()
             {
                 MainCard = await _context.Blogs.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
-                SideCards = await _context.Blogs.OrderByDescending(b => b.Created).Skip(1).Take(4).ToListAsync()
+                SideCards = await _context.Blogs.OrderByDescending(b => b.Created).Skip(1).Take(4).ToListAsync(),
+                MainPostCard = await _context.BlogPosts.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
+                SidePostCards = await _context.BlogPosts.OrderByDescending(b => b.Created).Skip(1).Take(4).ToListAsync()
             };
             HomeIndexViewModel blogsvm = new()
             {
                 Blogs = await _context.Blogs.ToListAsync(),
                 MostRecentBlog = await _context.Blogs.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
                 MostRecentPost = await _context.BlogPosts.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
+                //OldestPosts = await _context.BlogPosts.OrderBy(p => p.Created).Take(4).ToListAsync(),
                 NewestCards = newestCards,
             };
 
             return View(blogsvm);
+        }
+
+        public IActionResult ContactMe()
+        {
+            return View();
+        }
+
+        public IActionResult AboutMe()
+        {
+            return View();
         }
 
         public IActionResult Privacy()

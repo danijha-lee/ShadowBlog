@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using ShadowBlog.Data;
 using ShadowBlog.Models;
 using ShadowBlog.Services.Interfaces;
+using ShadowBlog.ViewModels;
 
 namespace ShadowBlog.Controllers
 {
@@ -30,7 +31,24 @@ namespace ShadowBlog.Controllers
         // GET: Blogs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Blogs.ToListAsync());
+            PostCardsViewModel newestCards = new()
+            {
+                MainCard = await _context.Blogs.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
+                SideCards = await _context.Blogs.OrderByDescending(b => b.Created).Skip(1).Take(4).ToListAsync(),
+                MainPostCard = await _context.BlogPosts.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
+                SidePostCards = await _context.BlogPosts.OrderByDescending(b => b.Created).Skip(1).Take(4).ToListAsync()
+            };
+            HomeIndexViewModel blogsvm = new()
+            {
+                Blogs = await _context.Blogs.ToListAsync(),
+                MostRecentBlog = await _context.Blogs.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
+                MostRecentPost = await _context.BlogPosts.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
+                //OldestPosts = await _context.BlogPosts.OrderBy(p => p.Created).Take(4).ToListAsync(),
+                NewestCards = newestCards,
+            };
+
+            return View(blogsvm);
+            //return View(await _context.Blogs.ToListAsync());
         }
 
         // GET: Blogs/Details/5

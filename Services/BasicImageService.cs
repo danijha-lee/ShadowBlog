@@ -1,32 +1,21 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using ShadowBlog.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using ShadowBlog.Services.Interfaces;
 
 namespace ShadowBlog.Services
 {
     public class BasicImageService : IImageService
     {
-        public string ContentType(IFormFile file)
-        {
-            if (file is null)
-            {
-                return null;
-            }
+        private readonly IConfiguration _configuration;
 
-            return file.ContentType;
-        }
-
-        public string DecodeImage(byte[] data, string type)
+        public BasicImageService(IConfiguration configuration)
         {
-            if (data is null || type is null)
-            {
-                return null;
-            }
-            return $"data:image/{type};base64,{Convert.ToBase64String(data)}";
+            _configuration = configuration;
         }
 
         public async Task<byte[]> EncodeImageAsync(IFormFile file)
@@ -47,14 +36,32 @@ namespace ShadowBlog.Services
             return await File.ReadAllBytesAsync(file);
         }
 
-        public int Size(IFormFile file)
+        public string ContentType(IFormFile file)
         {
-            if (file is null)
-            {
-                return 0;
-            }
+            return file?.ContentType;
+        }
 
-            return Convert.ToInt32(file.Length);
+        public string DecodeImage(byte[] data, string type)
+        {
+            if (data is null || type is null) return null;
+            return $"data:{type};base64,{Convert.ToBase64String(data)}";
+        }
+
+        private bool ValidType(IFormFile file)
+        {
+            var fileContentType = ContentType(file).Split("/")[1];
+
+            var acceptableExtensions = _configuration["AppImages:AllowedExtensions"];
+            var extList = acceptableExtensions.Split(',').ToList();
+            var position = extList.IndexOf(fileContentType);
+
+            return position >= 0;
+        }
+
+        private bool ValidSize(IFormFile file)
+        {
+            const int maxFileSize = 2 * 1024 * 1024;
+            return Size(file) < maxFileSize;
         }
 
         public bool ValidImage(IFormFile file)
@@ -62,26 +69,24 @@ namespace ShadowBlog.Services
             return ValidType(file) && ValidSize(file);
         }
 
-        public bool ValidSize(IFormFile file)
+        private int Size(IFormFile file)
         {
-            const int maxFileSize = 2 * 1024 * 1024;
-            return Size(file) < maxFileSize;
+            return Convert.ToInt32(file?.Length);
         }
 
-        public bool ValidType(IFormFile file)
+        int IImageService.Size(IFormFile file)
         {
-            var acceptableTypes = new List<String>();
-            acceptableTypes.Add("jpg");
-            acceptableTypes.Add("jpeg");
-            acceptableTypes.Add("gif");
-            acceptableTypes.Add("bmp");
-            acceptableTypes.Add("png");
+            throw new NotImplementedException();
+        }
 
-            var fileContentType = ContentType(file).Split("/")[1];
+        bool IImageService.ValidType(IFormFile file)
+        {
+            throw new NotImplementedException();
+        }
 
-            var position = acceptableTypes.IndexOf(fileContentType);
-
-            return position > 0;
+        bool IImageService.ValidSize(IFormFile file)
+        {
+            throw new NotImplementedException();
         }
     }
 }
