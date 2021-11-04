@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +50,9 @@ namespace ShadowBlog
             //Register the BasicImageService as the concrete class for the IImageService interface
             services.AddScoped<IImageService, BasicImageService>();
             services.AddTransient<ISlugService, BasicSlugService>();
+            services.AddTransient<IEmailSender, BasicEmailService>();
+            services.AddScoped<SearchService>();
+            services.AddScoped<BlogService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

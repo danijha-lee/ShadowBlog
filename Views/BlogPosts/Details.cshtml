@@ -1,11 +1,21 @@
-﻿@model ShadowBlog.Models.BlogPost
-@inject IImageService _imageService
-@using ShadowBlog.Services.Interfaces 
+﻿@using Microsoft.AspNetCore.Identity
+@using ShadowBlog.Data
+@using ShadowBlog.Services.Interfaces
+@using ShadowBlog.Services
+@using ShadowBlog.Enums
+@using ShadowBlog.Models
 
+@inject UserManager<BlogUser> _userManager
+@inject IImageService _imageService
+@inject ApplicationDbContext _context
+@inject BlogService _blogservice
+
+@model BlogPost
 @{
     ViewData["Title"] = "Details";
+    BlogUser blogUser = await _userManager.GetUserAsync(User);
+    //List<Blog> blogs =  _context.Blogs.ToList();
 }
-
 <!--=====================================-->
 <!--=           Inner Banner Start      =-->
 <!--=====================================-->
@@ -36,11 +46,11 @@
                 <div class="single-post-layout1">
                     <div class="post-details">
                         <div class="post-img">
-                            <img src="@_imageService.DecodeImage(Model.ImageData, Model.ImageType)" alt="Post Photo">
+                            <img src="@_imageService.DecodeImage(Model.ImageData, Model.ImageType)" alt="Post Image">
                         </div>
                         <div class="post-date"><i class="flaticon-clock"></i>@Model.Created.ToString("dd MMMM, yyyy")</div>
                         <h2 class="post-title">
-                           @Model.Title
+                            @Model.Title
                         </h2>
                         <div class="entry-meta">
                             <div class="row align-items-center">
@@ -53,11 +63,12 @@
                                                 </div>
                                                 <div class="author-content">
                                                     <div class="item-text">Posted by</div>
-                                                    <div class="author-name"><a asp-action="AboutMe" asp-controller="Home">Monae Lee</a></div>
+                                                    <div class="author-name"><a href="#">Monae Lee</a></div>
                                                 </div>
                                             </li>
+                                            @*<form asp-action=""*@
                                             <li class="meta-action"><i class="flaticon-heart"></i>2,350</li>
-                                            <li class="meta-action"><i class="flaticon-comment-white-oval-bubble"></i>1,380</li>
+                                            <li class="meta-action"><i class="flaticon-comment-white-oval-bubble"></i>@Model.Comments.Count()</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -75,22 +86,49 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <p>@Html.Raw(Model.Content)</p>
-                        @*<blockquote>
-                            Srem Ipsum is simply dummy text of the printing and typ esetting industry. Ipsum has been the industry's standard dummy text eorem Ipsum is simply the industry's standard .
-                        </blockquote>*@
-                       
+                        @*<p>Rimply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions</p>*@
+                        @*<p>Rimply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
+                            <blockquote>
+                                Srem Ipsum is simply dummy text of the printing and typ esetting industry. Ipsum has been the industry's standard dummy text eorem Ipsum is simply the industry's standard .
+                            </blockquote>*@
+                        <p>@Model.Content</p>
                         <ul class="related-tag">
                             <li><a href="#">Action</a></li>
                             <li><a href="#">Racing</a></li>
                             <li><a href="#">Games</a></li>
                         </ul>
                     </div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="comment-form mb-5">
+                            <div class="heading-layout3">
+                                <h3 class="heading-title-md">Leave a Comment</h3>
+                            </div>
+                            <form asp-controller="Comments" asp-action="Create">
+                                <input type="hidden" name="BlogPostId" value="@Model.Id" />
+                                <div class="row gutters-2">
+                                    <div class="col-lg-4 form-group border">
+                                        <textarea name="CommentBody" class="form-control" rows="5"></textarea>
+                                    </div>
+                                    <div class="col-lg-12 form-group ">
+                                        <button type="submit" class="submit-btn">SUBMIT NOW</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col text-center">
+                                <a class="btn btn-lg btn-dark w-75" returnUrl="" asp-area="Identity" asp-page="/Account/Login">Login to add a comment!</a>
+                            </div>
+                        </div>
+                    }
                     <div class="item-author">
                         <div class="media">
                             <div class="item-img">
-                                <img  alt="Author">
+                                <img src="~/media/post/author.jpg" alt="Author">
                             </div>
                             <div class="media-body">
                                 <h3 class="item-title">Mark Willy</h3>
@@ -107,55 +145,51 @@
                         </div>
                     </div>
                     <div class="post-comments">
-                        <div class="heading-layout3">
-                            <h3 class="heading-title-md">03 Comments</h3>
+
+                        <div class="heading-layout3" id="fragComment">
+                            <h3 class="heading-title-md">@Model.Comments.Count() Comments</h3>
                         </div>
                         <div class="comment-box">
-                            <div class="media">
-                                <div class="item-img">
-                                    <img src="~/media/post/author2.jpg" alt="logo">
+                            @foreach (Comment comment in Model.Comments.OrderByDescending(c => c.Created))
+                            {
+                                <div class="media">
+                                    @if (comment.BlogUser.ImageData is not null)
+                                    {
+                                        <div class="item-img">
+                                            <img src="@_imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ImageType)" width="105" height="105" alt="User Image">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="item-img">
+                                            <img src="~/img/defualtAccountImage.jpg" width="105" height="105" alt="User Image">
+                                        </div>
+                                    }
+                                    @if (comment.Moderated is not null)
+                                    {
+                                        <div class="media-body">
+                                            <h4 class="item-title">Moderated by @comment.Moderator.FullName ,<span>@comment.Updated?.ToString("dd MMMM, yyyy")</span></h4>
+                                            <p>@comment.CommentBody</p>
+                                            <a data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#editModal" class="reply-btn btnEdit">Edit</a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="media-body">
+                                            <h4 class="item-title">@comment.BlogUser.FullName ,<span>@comment.Created.ToString("dd MMMM, yyyy")</span></h4>
+                                            <p>@comment.CommentBody</p>
+                                            <a data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#EditModal" class="reply-btn btnEdit">Edit</a>
+                                        </div>
+
+                                    }
+                                    @if (User.IsInRole("Moderator"))
+
+                                    {
+                                        <button class="btn btn-danger px-3 btnModerate btnModerate" data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#moderateModal">Moderate</button>
+                                    }
                                 </div>
-                                <div class="media-body">
-                                    <h4 class="item-title">Dakcon Nitiya ,<span>September 29, 2019</span></h4>
-                                    <p>Borem Ipsum is simply dummy text of the printing and typesetting indusem Ipsum has is simply dumhe printing.</p>
-                                    <a href="#" class="reply-btn">Reply</a>
-                                </div>
-                            </div>
-                            <div class="media"> 
-                                <div class="item-img">
-                                    <img src="~/media/post/author3.jpg" alt="logo">
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="item-title">Mark Willy ,<span>September 29, 2019</span></h4>
-                                    <p>Borem Ipsum is simply dummy text of the printing and typesetting indusem Ipsum has is simply dumhe printing.</p>
-                                    <a href="#" class="reply-btn">Reply</a>
-                                </div>
-                            </div>
+                            }
                         </div>
-                    </div>
-                    <div class="comment-form">
-                        <div class="heading-layout3">
-                            <h3 class="heading-title-md">Leave a Comment</h3>
-                        </div>
-                        <form action="#">
-                            <div class="row guuters-25">
-                                <div class="col-lg-4 form-group">
-                                    <input type="text" class="form-control" name="name" placeholder="Name *">
-                                </div>
-                                <div class="col-lg-4 form-group">
-                                    <input type="email" class="form-control" name="email" placeholder="Email *">
-                                </div>
-                                <div class="col-lg-4 form-group">
-                                    <input type="text" class="form-control" name="website" placeholder="Website *">
-                                </div>
-                                <div class="col-lg-12 form-group">
-                                    <textarea placeholder="Message" class="textarea form-control" name="message" rows="7" cols="20"></textarea>
-                                </div>
-                                <div class="col-lg-12 form-group">
-                                    <button type="submit" class="submit-btn disabled">SUBMIT NOW</button>
-                                </div>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -172,27 +206,16 @@
                 </div>
                 <div class="widget widget-archive">
                     <div class="heading-layout1">
-                        <h3 class="heading-title">Categories</h3>
+                        <h3 class="heading-title">Blogs</h3>
                     </div>
                     <ul class="archive-list">
-                        <li>
-                            <a href="#">Action<span>(12)</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Racing<span>(4)</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Football<span>(11)</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Fight<span>(79)</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Animation<span>(4)</span></a>
-                        </li>
-                        <li>
-                            <a href="#">Boxing<span>(11)</span></a>
-                        </li>
+                        @foreach (Blog blog in _context.Blogs.OrderBy(b => b.Created).Take(6))
+                        {
+                            <li>
+                                <a asp-action="ChildIndex" asp-controller="BlogPosts" asp-route-id="@blog.Id"> @blog.Name <span> @_blogservice.CountPosts(blog.Id) </span></a>
+                            </li>
+
+                        }
                     </ul>
                 </div>
                 <div class="widget widget-social">
@@ -249,7 +272,7 @@
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
+                                <h4 class="post-title"><a href="single-post1.html"> Hitlist ast Computer ar in the market ...</a></h4>
                             </div>
                         </div>
                         <div class="media">
@@ -258,7 +281,7 @@
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
+                                <h4 class="post-title"><a href="single-post1.html"> Hitlist ast Computer ar in the market ...</a></h4>
                             </div>
                         </div>
                         <div class="media">
@@ -267,7 +290,7 @@
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
+                                <h4 class="post-title"><a href="single-post1.html"> Hitlist ast Computer ar in the market ...</a></h4>
                             </div>
                         </div>
                         <div class="media">
@@ -276,7 +299,7 @@
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
+                                <h4 class="post-title"><a href="single-post1.html"> Hitlist ast Computer ar in the market ...</a></h4>
                             </div>
                         </div>
                     </div>
@@ -286,12 +309,24 @@
                         <h2 class="heading-title">Popular Tags</h2>
                     </div>
                     <ul class="tag-list">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Racing</a></li>
-                        <li><a href="#">Mission</a></li>
-                        <li><a href="#">Wind</a></li>
-                        <li><a href="#">Animation</a></li>
-                        <li><a href="#">Cycling</a></li>
+                        <li>
+                            <a href="#">
+                                Action </ a ></ li>
+                                < li >< a href="#">Racing
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Mission </ a ></ li>
+                                < li >< a href="#">Wind
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Animation </ a ></ li>
+                                < li >< a href="#">Cycling
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -299,41 +334,107 @@
     </div>
 </section>
 <!--=====================================-->
-<!--=           Social Start        	=-->
-<!--=====================================-->
+<!--=           Social Start = -->
+<!--===================================== -->
 <section class="social-box-wrap">
     <div class="container-fluid full-width">
         <div class="row no-gutters">
             <div class="col-lg-2 col-sm-4 col-6">
                 <div class="social-box-img">
-                    <a href="#"><img src="~/media/social/social1.png" alt="Social"></a>
+                    <a href="#">< img src="~/media/social/social1.png" alt="Social"></a>
                 </div>
             </div>
             <div class="col-lg-2 col-sm-4 col-6">
                 <div class="social-box-img">
-                    <a href="#"><img src="~/media/social/social2.png" alt="Social"></a>
+                    <a href="#">< img src="~/media/social/social2.png" alt="Social"></a>
                 </div>
             </div>
             <div class="col-lg-2 col-sm-4 col-6">
                 <div class="social-box-img">
-                    <a href="#"><img src="~/media/social/social3.png" alt="Social"></a>
+                    <a href="#">< img src="~/media/social/social3.png" alt="Social"></a>
                 </div>
             </div>
             <div class="col-lg-2 col-sm-4 col-6">
                 <div class="social-box-img">
-                    <a href="#"><img src="~/media/social/social4.png" alt="Social"></a>
+                    <a href="#">< img src="~/media/social/social4.png" alt="Social"></a>
                 </div>
             </div>
             <div class="col-lg-2 col-sm-4 col-6">
                 <div class="social-box-img">
-                    <a href="#"><img src="~/media/social/social5.png" alt="Social"></a>
+                    <a href="#">< img src="~/media/social/social5.png" alt="Social"></a>
                 </div>
             </div>
             <div class="col-lg-2 col-sm-4 col-6">
                 <div class="social-box-img">
-                    <a href="#"><img src="~/media/social/social6.png" alt="Social"></a>
+                    <a href="#">< img src="~/media/social/social6.png" alt="Social"></a>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+@*<----------------------------MODAL START-------------------->*@
+
+<div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editing Comment...</h5>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Comments" asp-action="Edit">
+                    <input type="hidden" id="ModalCommentId" name="CommentId" />
+                    <textarea id="ModalCommentBody" name="Body" rows="5" class="w-100"></textarea>
+                    <button class="btn btn-dark w-100" type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="moderateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Moderating Comment...</h5>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Comments" asp-action="Moderate">
+                    <input type="hidden" id="ModerateModalCommentId" name="id" value="" />
+                    <select name="ModerationType" asp-items="@Html.GetEnumSelectList<ModType>()"></select>
+                    <textarea id="ModalModeratedBody" name="ModeratedBody" rows="5" class="w-100"></textarea>
+                    <button class="btn btn-danger w-100" type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*<----------------------------MODAL END-------------------->*@
+
+@section Scripts
+{
+    <script>
+        document.querySelectorAll("a.btnEdit").forEach(btn => {
+            btn.addEventListener("click", function () {
+                //Transfer the value of the button's data-UserCommentId to the Modals hidden input
+                document.getElementById("ModalCommentId").value = this.getAttribute("data-UserCommentId");
+                //I need to use JS to get the comment closest to the button i just clicked
+                let closestComment = this.closest("comment-box").querySelector("p").textContent;
+                document.getElementById("ModalCommentBody").textContent = closestComment;
+            });
+        });
+        document.querySelectorAll("a.btnModerate").forEach(btn => {
+            btn.addEventListener("click", function () {
+                document.getElementById("ModerateModalCommentId").value = this.getAttribute('data-UserCommentId');
+                let closestComment = this.closest("div.comment-comment").querySelector("p").textContent;
+                document.getElementById("ModalModeratedBody").textContent = closestComment;
+            });
+        });
+    </script>
+}

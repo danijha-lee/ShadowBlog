@@ -9,6 +9,8 @@ using ShadowBlog.Models;
 using ShadowBlog.Services.Interfaces;
 using ShadowBlog.Enums;
 using Microsoft.AspNetCore.Authorization;
+using ShadowBlog.Services;
+using X.PagedList;
 
 namespace ShadowBlog.Controllers
 {
@@ -17,12 +19,24 @@ namespace ShadowBlog.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IImageService _imageService;
         private readonly ISlugService _slugService;
+        private readonly SearchService _searchService;
 
-        public BlogPostsController(ApplicationDbContext context, IImageService imageService, ISlugService slugService)
+        public BlogPostsController(ApplicationDbContext context,
+                                    IImageService imageService,
+                                    ISlugService slugService,
+                                    SearchService searchService)
         {
             _context = context;
             _imageService = imageService;
             _slugService = slugService;
+            _searchService = searchService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SearchPosts(string searchTerm)
+        {
+            var blogPosts = await _searchService.SearchAsync(searchTerm);
+            return View("ChildIndex", blogPosts);
         }
 
         public async Task<IActionResult> ChildIndex(int blogId)
@@ -39,14 +53,19 @@ namespace ShadowBlog.Controllers
         }
 
         // GET: BlogPosts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
+            var pageNumber = page ?? 1;
+            var pageSize = 5;
+
             var applicationDbContext = _context.BlogPosts
                 .Include(b => b.Blog)
                 .Where(b => b.ReadyStatus == ReadyState.ProductionReady)
                 .OrderByDescending(b => b.Created);
 
-            return View(await applicationDbContext.ToListAsync());
+            var blogPosts = await applicationDbContext.ToPagedListAsync(pageNumber, pageSize);
+
+            return View(blogPosts);
         }
 
         public async Task<IActionResult> Preview()
@@ -69,7 +88,10 @@ namespace ShadowBlog.Controllers
 
             var blogPost = await _context.BlogPosts
                 .Include(b => b.Blog)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(b => b.Comments)
+                .ThenInclude(c => c.BlogUser)
+                .FirstOrDefaultAsync(m => m.Id == (int)id);
+
             if (blogPost == null)
             {
                 return NotFound();
@@ -123,8 +145,16 @@ namespace ShadowBlog.Controllers
                 {
                     if (!_imageService.ValidImage(blogPost.Image))
                     {
-                        ModelState.AddModelError("Image", "Please choose a valid image.");
-                        return View(blogPost);
+                        if (!_imageService.ValidType(blogPost.Image))
+                        {
+                            ModelState.AddModelError("Image", "Please choose a valid image type.");
+                            return View(blogPost);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Image", "Please choose a valid image size.");
+                            return View(blogPost);
+                        }
                     }
                     else
                     {
@@ -134,7 +164,7 @@ namespace ShadowBlog.Controllers
                 }
                 else
                 {
-                    blogPost.ImageData = await _imageService.EncodeImageAsync("blogPostDefaultImage.png");
+                    blogPost.ImageData = await _imageService.EncodeImageAsync("NeonLightDefaultPostImage.jpg");
                     blogPost.ImageType = "jpg";
                 }
 

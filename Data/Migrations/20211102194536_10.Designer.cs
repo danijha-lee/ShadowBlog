@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ShadowBlog.Data;
@@ -9,9 +10,10 @@ using ShadowBlog.Data;
 namespace ShadowBlog.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211102194536_10")]
+    partial class _10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -200,9 +202,6 @@ namespace ShadowBlog.Data.Migrations
                     b.Property<int>("BlogId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("BlogUserId")
-                        .HasColumnType("text");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("text");
@@ -233,8 +232,6 @@ namespace ShadowBlog.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BlogId");
-
-                    b.HasIndex("BlogUserId");
 
                     b.ToTable("BlogPosts");
                 });
@@ -439,13 +436,7 @@ namespace ShadowBlog.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShadowBlog.Models.BlogUser", "BlogUser")
-                        .WithMany()
-                        .HasForeignKey("BlogUserId");
-
                     b.Navigation("Blog");
-
-                    b.Navigation("BlogUser");
                 });
 
             modelBuilder.Entity("ShadowBlog.Models.Comment", b =>

@@ -14,7 +14,13 @@ namespace ShadowBlog.ViewModels
 
         public BlogPost MostRecentPost { get; set; } = new();
 
-        public BlogPost OldestPosts { get; set; } = new();
+        public List<BlogPost> OldestPosts { get; set; } = new();
+
+        public BlogPost MainOldestPost { get; set; } = new();
+
+        public Blog MainOldestBlog { get; set; } = new();
+
+        public List<Blog> OldestBlogs { get; set; } = new();
 
         public PostCardsViewModel HeaderCards { get; set; }
         public PostCardsViewModel NewestCards { get; set; }

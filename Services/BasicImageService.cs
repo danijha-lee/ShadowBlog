@@ -47,7 +47,7 @@ namespace ShadowBlog.Services
             return $"data:{type};base64,{Convert.ToBase64String(data)}";
         }
 
-        private bool ValidType(IFormFile file)
+        public bool ValidType(IFormFile file)
         {
             var fileContentType = ContentType(file).Split("/")[1];
 
@@ -58,10 +58,11 @@ namespace ShadowBlog.Services
             return position >= 0;
         }
 
-        private bool ValidSize(IFormFile file)
+        public bool ValidSize(IFormFile file)
         {
             const int maxFileSize = 2 * 1024 * 1024;
-            return Size(file) < maxFileSize;
+            var fileSize = Size(file);
+            return fileSize < maxFileSize;
         }
 
         public bool ValidImage(IFormFile file)
@@ -69,24 +70,9 @@ namespace ShadowBlog.Services
             return ValidType(file) && ValidSize(file);
         }
 
-        private int Size(IFormFile file)
+        public int Size(IFormFile file)
         {
             return Convert.ToInt32(file?.Length);
-        }
-
-        int IImageService.Size(IFormFile file)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool IImageService.ValidType(IFormFile file)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool IImageService.ValidSize(IFormFile file)
-        {
-            throw new NotImplementedException();
         }
     }
 }

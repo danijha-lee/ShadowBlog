@@ -29,16 +29,20 @@ namespace ShadowBlog.Controllers
             PostCardsViewModel newestCards = new()
             {
                 MainCard = await _context.Blogs.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
-                SideCards = await _context.Blogs.OrderByDescending(b => b.Created).Skip(1).Take(4).ToListAsync(),
+                SideCards = await _context.Blogs.OrderByDescending(b => b.Created).ToListAsync(),
                 MainPostCard = await _context.BlogPosts.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
-                SidePostCards = await _context.BlogPosts.OrderByDescending(b => b.Created).Skip(1).Take(4).ToListAsync()
+                SidePostCards = await _context.BlogPosts.OrderByDescending(b => b.Created).ToListAsync()
             };
             HomeIndexViewModel blogsvm = new()
             {
                 Blogs = await _context.Blogs.ToListAsync(),
                 MostRecentBlog = await _context.Blogs.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
                 MostRecentPost = await _context.BlogPosts.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
-                //OldestPosts = await _context.BlogPosts.OrderBy(p => p.Created).Take(4).ToListAsync(),
+                OldestPosts = await _context.BlogPosts.OrderBy(p => p.Created).ToListAsync(),
+                MainOldestPost = await _context.BlogPosts.OrderBy(p => p.Created).FirstOrDefaultAsync(),
+                MainOldestBlog = await _context.Blogs.OrderBy(p => p.Created).FirstOrDefaultAsync(),
+                OldestBlogs = await _context.Blogs.OrderBy(b => b.Created).ToListAsync(),
+
                 NewestCards = newestCards,
             };
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShadowBlog.Data;
+using ShadowBlog.Enums;
 using ShadowBlog.Models;
 using ShadowBlog.Services.Interfaces;
 using ShadowBlog.ViewModels;
@@ -42,8 +43,9 @@ namespace ShadowBlog.Controllers
             {
                 Blogs = await _context.Blogs.ToListAsync(),
                 MostRecentBlog = await _context.Blogs.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
-                MostRecentPost = await _context.BlogPosts.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
-                //OldestPosts = await _context.BlogPosts.OrderBy(p => p.Created).Take(4).ToListAsync(),
+                MostRecentPost = await _context.BlogPosts.OrderByDescending(b => b.Created).Where(b => b.ReadyStatus == ReadyState.ProductionReady).FirstOrDefaultAsync(),
+                OldestPosts = await _context.BlogPosts.OrderBy(p => p.Created).Where(b => b.ReadyStatus == ReadyState.ProductionReady).Take(4).ToListAsync(),
+                OldestBlogs = await _context.Blogs.OrderBy(b => b.Created).Take(4).ToListAsync(),
                 NewestCards = newestCards,
             };
 
@@ -94,8 +96,16 @@ namespace ShadowBlog.Controllers
                     if (!_imageService.ValidImage(blog.Image))
                     {
                         //We need to add a custom Model Error and inform the user
-                        ModelState.AddModelError("Image", "Please choose a valid image");
-                        return View(blog);
+                        if (!_imageService.ValidType(blog.Image))
+                        {
+                            ModelState.AddModelError("Image", "Please choose a valid image type.");
+                            return View(blog);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Image", "Please choose a valid image size.");
+                            return View(blog);
+                        }
                     }
                     else
                     {

@@ -55,5 +55,9 @@ namespace ShadowBlog.Models
 
         //Navigational properties
         public virtual Blog Blog { get; set; }
+
+        public virtual BlogUser BlogUser { get; set; }
+
+        public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
     }
 }
