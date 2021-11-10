@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using ShadowBlog.Data;
 using ShadowBlog.Models;
@@ -16,12 +18,18 @@ namespace ShadowBlog.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly IEmailSender _emailService;
+        private IConfiguration _configuration;
 
         public HomeController(ILogger<HomeController> logger,
-                                ApplicationDbContext context)
+                                ApplicationDbContext context,
+                                IEmailSender emailService,
+                                IConfiguration configuration)
         {
             _logger = logger;
             _context = context;
+            _emailService = emailService;
+            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index()
@@ -48,10 +56,21 @@ namespace ShadowBlog.Controllers
 
             return View(blogsvm);
         }
-
         public IActionResult ContactMe()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ContactMe(string name, string email, string phone, string message)
+        {
+            var subject = $"{name} has reached out to you from the ShadowBlog Application";
+
+            var body = $"{message}.<br/><br/>{name} can be called at {phone} or emailed at {email} if follow up is required.";
+
+            var myEmail = _configuration["SmtpSettings:Email"];
+            await _emailService.SendEmailAsync(myEmail, subject, body);
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult AboutMe()

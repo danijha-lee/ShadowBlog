@@ -11,6 +11,7 @@ using ShadowBlog.Enums;
 using ShadowBlog.Models;
 using ShadowBlog.Services.Interfaces;
 using ShadowBlog.ViewModels;
+using X.PagedList;
 
 namespace ShadowBlog.Controllers
 {
@@ -30,26 +31,18 @@ namespace ShadowBlog.Controllers
         }
 
         // GET: Blogs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            PostCardsViewModel newestCards = new()
-            {
-                MainCard = await _context.Blogs.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
-                SideCards = await _context.Blogs.OrderByDescending(b => b.Created).Skip(1).Take(4).ToListAsync(),
-                MainPostCard = await _context.BlogPosts.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
-                SidePostCards = await _context.BlogPosts.OrderByDescending(b => b.Created).Skip(1).Take(4).ToListAsync()
-            };
-            HomeIndexViewModel blogsvm = new()
-            {
-                Blogs = await _context.Blogs.ToListAsync(),
-                MostRecentBlog = await _context.Blogs.OrderByDescending(b => b.Created).FirstOrDefaultAsync(),
-                MostRecentPost = await _context.BlogPosts.OrderByDescending(b => b.Created).Where(b => b.ReadyStatus == ReadyState.ProductionReady).FirstOrDefaultAsync(),
-                OldestPosts = await _context.BlogPosts.OrderBy(p => p.Created).Where(b => b.ReadyStatus == ReadyState.ProductionReady).Take(4).ToListAsync(),
-                OldestBlogs = await _context.Blogs.OrderBy(b => b.Created).Take(4).ToListAsync(),
-                NewestCards = newestCards,
-            };
+            var pageNumber = page ?? 1;
+            var pageSize = 6;
 
-            return View(blogsvm);
+            var context = _context.Blogs
+                .OrderByDescending(b => b.Created);
+
+            var blogs = await context.ToPagedListAsync(pageNumber, pageSize);
+
+            return View(blogs);
+
             //return View(await _context.Blogs.ToListAsync());
         }
 

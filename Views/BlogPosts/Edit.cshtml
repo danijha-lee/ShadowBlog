@@ -1,4 +1,5 @@
 ﻿@model ShadowBlog.Models.BlogPost
+@using ShadowBlog.Enums
 
 @{
     ViewData["Title"] = "Edit";
@@ -9,20 +10,23 @@
 <h4>BlogPost</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 offset-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="BlogId" class="control-label"></label>
-                <select asp-for="BlogId" class="form-control" asp-items="ViewBag.BlogId"></select>
-                <span asp-validation-for="BlogId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
+            @if (Model?.BlogId is > 0)
+            {
+                <input type="hidden" asp-for="BlogId" />
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="BlogId" class="control-label"></label>
+                    <select asp-for="BlogId" class="form-control" asp-items="ViewBag.BlogId"></select>
+                </div>
+
+            }
+            
             <div class="form-group">
                 <label asp-for="Abstract" class="control-label"></label>
                 <input asp-for="Abstract" class="form-control" />
@@ -33,35 +37,40 @@
                 <input asp-for="Content" class="form-control" />
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
+            <div class="form-group border border-dark">
+                <label asp-for="Image" class="control-label"></label>
+                <input type="file" accept=".png,.jpg,.jpeg" asp-for="Image" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Updated" class="control-label"></label>
-                <input asp-for="Updated" class="form-control" />
-                <span asp-validation-for="Updated" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="ReadyStatus" class="control-label"></label>
-                <select asp-for="ReadyStatus" class="form-control"></select>
+                <select asp-for="ReadyStatus" asp-items="@Html.GetEnumSelectList<ReadyState>()" class="form-control"></select>
                 <span asp-validation-for="ReadyStatus" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Slug" class="control-label"></label>
-                <input asp-for="Slug" class="form-control" />
-                <span asp-validation-for="Slug" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageData" class="control-label"></label>
-                <input asp-for="ImageData" class="form-control" />
-                <span asp-validation-for="ImageData" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageType" class="control-label"></label>
-                <input asp-for="ImageType" class="form-control" />
-                <span asp-validation-for="ImageType" class="text-danger"></span>
+
+            
+            <div class="row">
+                <div class="col-6">
+                    <div class="row mb-2">
+                        <div class="col">
+                            <input id="tagEntry" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-dark btn-sm w-100" name="Add" onclick="AddTag()">Add</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-dark btn-sm w-100" name="Delete" onclick="DeleteTag()">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <select class="w-100" name="TagValues" id="TagList" multiple>
+                        @*<option></option>*@
+                    </select>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -76,4 +85,15 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script src="~/js/CustomTags.js"></script>
+    <script>
+        let fileInput = document.getElementById("Image");
+        fileInput.onchange = evt => {
+            const [file] = fileInput.files
+            if (file) {
+                document.getElementById("imgPreview").src = URL.createObjectURL(file);
+            }
+        }
+    </script>
 }

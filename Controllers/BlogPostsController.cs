@@ -11,6 +11,7 @@ using ShadowBlog.Enums;
 using Microsoft.AspNetCore.Authorization;
 using ShadowBlog.Services;
 using X.PagedList;
+using System.Collections.Generic;
 
 namespace ShadowBlog.Controllers
 {
@@ -33,23 +34,32 @@ namespace ShadowBlog.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SearchPosts(string searchTerm)
+        public async Task<IActionResult> SearchPosts(int? page, string searchTerm)
         {
+            var pageNumber = page ?? 1;
+            var pageSize = 5;
+            ViewData["SearchTerm"] = searchTerm;
             var blogPosts = await _searchService.SearchAsync(searchTerm);
-            return View("ChildIndex", blogPosts);
+
+            return View("ChildIndex", await blogPosts.ToPagedListAsync(pageNumber, pageSize));
         }
 
-        public async Task<IActionResult> ChildIndex(int blogId)
+        public async Task<IActionResult> ChildIndex(int blogId, int? page)
         {
             //I don't want to get all of the BlogPosts....
             //I want to get all of the BlogPosts where the BlogId = blogId
             //Also...I only want to grab production ready BlogPosts
-            var blogPosts = _context.BlogPosts
+            var pageNumber = page ?? 1;
+            var pageSize = 5;
+
+            var applicationDbContext = _context.BlogPosts
                 .Include(b => b.Blog)
-                .Where(b => b.BlogId == blogId && b.ReadyStatus == ReadyState.ProductionReady)
+                .Where(b => b.ReadyStatus == ReadyState.ProductionReady && b.BlogId == blogId)
                 .OrderByDescending(b => b.Created);
 
-            return View(await blogPosts.ToListAsync());
+            var blogPosts = await applicationDbContext.ToPagedListAsync(pageNumber, pageSize);
+
+            return View(blogPosts);
         }
 
         // GET: BlogPosts
@@ -79,18 +89,19 @@ namespace ShadowBlog.Controllers
         }
 
         // GET: BlogPosts/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string slug)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(slug))
             {
                 return NotFound();
             }
 
             var blogPost = await _context.BlogPosts
                 .Include(b => b.Blog)
+                .Include(b => b.Tags)
                 .Include(b => b.Comments)
                 .ThenInclude(c => c.BlogUser)
-                .FirstOrDefaultAsync(m => m.Id == (int)id);
+                .FirstOrDefaultAsync(m => m.Slug == slug);
 
             if (blogPost == null)
             {
@@ -98,6 +109,24 @@ namespace ShadowBlog.Controllers
             }
 
             return View(blogPost);
+        }
+
+        public async Task<IActionResult> TagIndex(string tag, int? page)
+        {
+            //Start with my pageing data
+            var pageNumber = page ?? 1;
+            var pageSize = 6;
+
+            var allBlogPostIds = _context.Tags.Where(t => t.Text.ToLower() == tag.ToLower())
+                                              .Select(t => t.BlogPostId);
+
+            var blogPosts = await _context.BlogPosts
+                                        .Where(b => allBlogPostIds.Contains(b.Id))
+                                        .OrderByDescending(b => b.Created)
+                                        .ToPagedListAsync(pageNumber, pageSize);
+
+            ViewData["Tag"] = tag;
+            return View(blogPosts);
         }
 
         // GET: BlogPosts/Create
@@ -123,7 +152,7 @@ namespace ShadowBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BlogId,Title,Abstract,Content,ReadyStatus,Image")] BlogPost blogPost)
+        public async Task<IActionResult> Create([Bind("BlogId,Title,Abstract,Content,ReadyStatus,Image")] BlogPost blogPost, List<string> tagValues)
         {
             if (ModelState.IsValid)
             {
@@ -174,6 +203,18 @@ namespace ShadowBlog.Controllers
 
                 _context.Add(blogPost);
                 await _context.SaveChangesAsync();
+
+                foreach (var tag in tagValues)
+                {
+                    _context.Add(new Tag()
+                    {
+                        BlogPostId = blogPost.Id,
+                        Text = tag
+                    });
+                }
+
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Name", blogPost.BlogId);

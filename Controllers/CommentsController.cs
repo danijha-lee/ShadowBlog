@@ -58,7 +58,7 @@ namespace ShadowBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BlogPostId,CommentBody")] Comment comment)
+        public async Task<IActionResult> Create([Bind("BlogPostId,CommentBody")] Comment comment, string slug)
         {
             if (ModelState.IsValid)
             {
@@ -70,15 +70,13 @@ namespace ShadowBlog.Controllers
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
                 //return RedirectToAction(nameof(Index));
-
+                var blogPost = _context.BlogPosts.Find(comment.BlogPostId);
                 //Return the user back to the Details page
-                return RedirectToAction("Details", "BlogPosts", new { id = comment.BlogPostId });
-
+                return RedirectToAction("Details", "BlogPosts", new { slug = blogPost.Slug }, "fragComment");
             }
 
             return View(comment);
         }
-
 
         // POST: Comments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -96,7 +94,7 @@ namespace ShadowBlog.Controllers
                 comment.CommentBody = body;
                 comment.Updated = DateTime.Now;
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "BlogPosts", new { id = comment.BlogPostId }, "fragComment");
+                return RedirectToAction("Details", "BlogPosts", new { slug = comment.BlogPost.Slug }, "fragComment");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -124,7 +122,6 @@ namespace ShadowBlog.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", "BlogPosts", new { id = comment.BlogPostId });
         }
-
 
         // GET: Comments/Delete/5
         public async Task<IActionResult> Delete(int? id)

@@ -57,9 +57,8 @@
                                 <div class="header-topbar-layout1">
                                     <div class="header-top-left">
                                         <ul>
-                                            <li><i class="fas fa-phone-volume"></i>Call : + (123) 6418 8990 </li>
-                                            <li><i class="far fa-user"></i><a asp-page="/Account/Login" asp-area="Identity">Log in / Register</a></li>
-                                            <li><partial name="_LoginPartial" /></li>
+                                            <li><i class="fas fa-phone-volume text-warning"></i>Call : + (123) 6418 8990 </li>
+                                            <partial name="_LoginPartial" />
                                         </ul>
                                     </div>
                                 </div>
@@ -88,20 +87,20 @@
                         <div class="col-lg-2">
                             <div class="logo-area">
                                 <a href="index.html" class="temp-logo">
-                                    <img src="media/logo.png" alt="logo" class="img-fluid">
+                                    <img src="~/media/logo.png" alt="logo" class="img-fluid">
                                 </a>
                             </div>
                         </div>
                         <div class="col-lg-8 d-flex justify-content-end position-static">
-                            <nav id="dropdown" class="template-main-menu">
+                            <nav id="dropdown" class="template-main-menu ">
                                 <ul>
                                     <li>
-                                        <a asp-action="Index" asp-controller="Home">HOME</a>
+                                        <a class="text-warning" asp-action="Index" asp-controller="Home">HOME</a>
 
 
                                     </li>
                                     <li>
-                                        <a asp-action="Index" asp-controller="Blogs">BLOGS</a>
+                                        <a  class="text-warning" asp-action="Index" asp-controller="Blogs">BLOGS</a>
                                         <ul class="dropdown-menu-col-1">
                                             <li>
                                                 <a asp-action="Create" asp-controller="Blogs">Add New Blog</a>
@@ -113,7 +112,7 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        <a asp-action="Index" asp-controller="BlogPosts">BLOG POSTS</a>
+                                        <a  class="text-warning" asp-action="Index" asp-controller="BlogPosts">BLOG POSTS</a>
 
                                         <ul class="dropdown-menu-col-1">
                                             <li>
@@ -124,28 +123,18 @@
                                             </li>
                                         </ul>
                                     </li>
+                                   
                                     <li>
-                                        <a href="#">BLOG</a>
+                                        <a  class="text-warning" href="#">PAGES</a>
                                         <ul class="dropdown-menu-col-1">
                                             <li>
-                                                <a href="blog.html">Blog 1</a>
-                                            </li>
-                                            <li>
-                                                <a href="single-post2.html">Single Blog</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>
-                                        <a href="#">PAGES</a>
-                                        <ul class="dropdown-menu-col-1">
-                                            <li>
-                                                <a href="#">ABOUT THE AUTHOR</a>
+                                                <a target="_blank " href="https://monaeleeportfolio.netlify.app">ABOUT THE AUTHOR</a>
                                             </li>
 
                                         </ul>
                                     </li>
                                     <li>
-                                        <a asp-action="ContactMe" asp-controller="Home">CONTACT</a>
+                                        <a  class="text-warning"asp-action="ContactMe" asp-controller="Home">CONTACT</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -189,15 +178,15 @@
                                 </h3>
                                 <div class="footer-link">
                                     <ul>
-                                        <li><a href="#">Home</a></li>
-                                        <li><a href="#">Products</a></li>
-                                        <li><a href="#">Services</a></li>
-                                        <li><a href="#">Blog</a></li>
+                                        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                                        <li><a asp-action="Index" asp-controller="Blogs">Blogs</a></li>
+                                        <li><a asp-action="Index" asp-controller="BlogPosts">Posts</a></li>
+                                       
                                     </ul>
                                     <ul>
-                                        <li><a href="#">Career</a></li>
-                                        <li><a href="#">Contacts</a></li>
-                                        <li><a href="#">Pages</a></li>
+                                        <li><a asp-action="ContactMe" asp-controller="Home">Contact Us</a></li>
+                                        <li><a target="_blank" href="https://portfolio-dlee.netlify.app">About The Author</a></li>
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -205,7 +194,7 @@
                         <div class="col-lg-6">
                             <div class="footer-box text-lg-center">
                                 <div class="footer-logo">
-                                    <a href="index.html"><img src="media/logo.png" alt="logo"></a>
+                                    <a href="index.html"><img src="~/media/logo.png" alt="logo"></a>
                                 </div>
                                 <p>We are an environmentally friendly renewable energy company offering eco products, & solutions.</p>
                                 <div class="input-group">
@@ -226,13 +215,9 @@
                                         <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
                                         <li><a href="#"><i class="fab fa-twitter"></i></a></li>
                                         <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-github-alt"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-skype"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-dribbble-square"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-vimeo-v"></i></a></li>
+                                        <li><a target="_blank" href="https://www.linkedin.com/in/monae-lee-23366a166/"><i class="fab fa-linkedin-in"></i></a></li>
+                                        <li><a target="_blank" href="https://github.com/danijha-lee"><i class="fab fa-github-alt"></i></a></li>
+                                       
                                     </ul>
                                 </div>
                             </div>
@@ -253,16 +238,16 @@
             <button class="close-btn sidebar-toggle"><i class="fas fa-times"></i></button>
             <div class="sidebar-logo">
                 <a href="index.html">
-                    <img src="media/logo.png" alt="Side Logo">
+                    <img src="~/media/logo.png" alt="Side Logo">
                 </a>
             </div>
             <ul class="menu-list">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="category1.html">Games</a></li>
-                <li><a href="#">Video</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Pages</a></li>
-                <li><a href="#">Contact</a></li>
+                <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                <li><a asp-action="Index" asp-controller="Blogs">Blogs</a></li>
+                <li><a asp-action="Index" asp-controller="BlogPosts">Posts</a></li>
+                <li><a asp-action="ContactMe" asp-controller="Home">Contact</a></li>
+                <li><a target="_blank " href="https://monaeleeportfolio.netlify.app">About The Author</a></li>
+                
             </ul>
             <ul class="item-social">
                 <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
@@ -278,8 +263,8 @@
         <!--=====================================-->
         <div id="header-search" class="header-search">
             <button type="button" class="close">×</button>
-            <form class="header-search-form">
-                <input type="search" value="" placeholder="Search here..." />
+            <form class="header-search-form" asp-action="SearchPosts" asp-controller="BlogPosts">
+                <input type="search" name="searchTerm" placeholder="Search here..." />
                 <button type="submit" class="search-btn">
                     <i class="flaticon-search"></i>
                 </button>

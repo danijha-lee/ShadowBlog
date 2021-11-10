@@ -1,6 +1,7 @@
 ﻿using ShadowBlog.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,13 +21,18 @@ namespace ShadowBlog.Models
         public DateTime Created { get; set; }
 
         public DateTime? Updated { get; set; }
+
+        [Required]
+        [StringLength(250, ErrorMessage = "The {0} must be at least {2} and at most {1} characters long.", MinimumLength = 3)]
         public string CommentBody { get; set; }
 
         //The Moderator related properties
         public DateTime? Deleted { get; set; }
 
         public DateTime? Moderated { get; set; }
-        public string ModeratedBody { get; set; }
+
+        public string ModeratedBody { get; set; } = string.Empty;
+
         public ModType Moderationtype { get; set; }
 
         //Navigational props

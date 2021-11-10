@@ -1,8 +1,12 @@
-﻿@model ShadowBlog.ViewModels.HomeIndexViewModel
+﻿@model IPagedList<Blog>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+
 @using ShadowBlog.Services.Interfaces
+@using ShadowBlog.Services
 @inject IImageService _imageService
-
-
+@inject BlogService _blogService
 @{
     ViewData["Title"] = "Index";
 }
@@ -35,68 +39,53 @@
         <div class="row gutters-40">
             <div class="col-xl-9">
                 <div class="row">
-                    @foreach (Blog blog in Model.Blogs) {
-                    <div class="col-md-6">
-                        <div class="post-list-layout3  post-grid16">
-                            <div class="item-img">
-                                <img src="@_imageService.DecodeImage(blog.ImageData, blog.ContentType)" width="460" height="520" alt="Blog Photo">
-                            </div>
-                            <div class="item-content">
-                                <div class="item-tag bg-light-green"></div>
-                                <div class="post-meta">
-                                    <ul>
-                                        <li><i class="flaticon-clock"></i>@blog.Created.ToString("dd MMMM, yyyy")</li>
-                                        @*<li class="item-author"><i class="flaticon-user bg-green"></i><span>By</span><a href="#">@blog.User.FullName</a></li>*@
-                                    </ul>
+                    @foreach (Blog blog in Model)
+                    {
+                        <div class="col-md-6">
+                            <div class="post-list-layout3  post-grid16">
+                                <div class="item-img">
+                                    <img src="@_imageService.DecodeImage(blog.ImageData, blog.ContentType)" width="460" height="520" alt="Blog Photo">
                                 </div>
-                                <h3 class="item-title"><a asp-action="ChildIndex" asp-controller="BlogPosts" asp-route-blogId="@blog.Id">@blog.Name</a></h3>
-                                <p>
-                                   @blog.Description
-                                </p>
+                                <div class="item-content">
+                                    <div class="item-tag bg-light-green"></div>
+                                    <div class="post-meta">
+                                        <ul>
+                                            <li><i class="flaticon-clock"></i>@blog.Created.ToString("dd MMMM, yyyy")</li>
+                                            @*<li class="item-author"><i class="flaticon-user bg-green"></i><span>By</span><a href="#">@blog.User.FullName</a></li>*@
+                                        </ul>
+                                    </div>
+                                    <h3 class="item-title"><a asp-action="ChildIndex" asp-controller="BlogPosts" asp-route-blogId="@blog.Id">@blog.Name</a></h3>
+                                    <p>
+                                        @blog.Description
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     }
                 </div>
-                <div class="pagination-layout1 mt-5">
-                    <ul>
-                        <li><a href="#" class="active">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                    </ul>
+                <div @*class="pagination-layout1"*@>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
+                new PagedListRenderOptions
+                {
+                    LiElementClasses = new string[] { "page-item" },
+                    PageClasses = new string[] { "page-link" }
+                })
                 </div>
             </div>
             <div class="col-xl-3 sidebar-widget-xl">
                 <div class="widget widget-search">
-                    <div class="input-group stylish-input-group">
-                        <input type="text" class="form-control" placeholder="Search Story . . .">
-                        <span class="input-group-addon">
-                            <button type="submit">
-                                <span class="flaticon-search" aria-hidden="true"></span>
-                            </button>
-                        </span>
-                    </div>
-                </div>
-                <div class="widget widget-upcoming-post">
-                    <div class="heading-layout1">
-                        <h2 class="heading-title">Recent Blog Posts</h2>
-                    </div>
-                    <div class="post-list-layout2">
-                        @foreach (BlogPost blogPost in Model.NewestCards.SidePostCards)
-                        {
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="@_imageService.DecodeImage(blogPost.ImageData, blogPost.ImageType)" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i>@blogPost.Created.ToString("dd MMMM, yyyy")</div>
-                                <h4 class="post-title"><a href="single-post1.html">@blogPost.Title</a></h4>
-                            </div>
+                    <form asp-action="SearchPosts" asp-controller="BlogPosts">
+                        <div class="input-group stylish-input-group">
+                            <input type="text" name="searchTerm" class="form-control" placeholder="Search Blogs . . .">
+                            <span class="input-group-addon">
+                                <button type="submit">
+                                    <span class="flaticon-search" aria-hidden="true"></span>
+                                </button>
+                            </span>
                         </div>
-                        }
-                    </div>
+                    </form>
                 </div>
+                
                 <div class="widget widget-social">
                     <div class="heading-layout1">
                         <h2 class="heading-title">Follow Us On</h2>
@@ -140,56 +129,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="widget widget-ad">
-                    <a href="#">
-                        <img src="media/figure/ad3.jpg" alt="Ad">
-                    </a>
-                </div>
-                <div class="widget widget-most-viewed">
-                    <div class="heading-layout1">
-                        <h3 class="heading-title">Most Viewed</h3>
-                    </div>
-                    <div class="grid-post">
-                        <div class="item-img">
-                            <img src="media/post/post28.jpg" alt="Post">
-                            <div class="item-tag bg-light">Scoccer</div>
-                        </div>
-                        <div class="item-content">
-                            <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                            <h3 class="post-title"><a href="single-post1.html">Top 10 Best Computer games Speakers in the Market</a></h3>
-                        </div>
-                    </div>
-                    <div class="list-post">
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="media/post/post7.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="media/post/post8.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="media/post/post9.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#" class="view-all-btn"><i class="flaticon-right-arrow"></i>View All Post</a>
-                </div>
+              
             </div>
         </div>
     </div>
@@ -197,53 +137,3 @@
 <!--=====================================-->
 <!--=            Footer Start           =-->
 <!--=====================================-->
-@*<h1>Index</h1>
-
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayName("Blog Image")
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Created)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        <img class="img-fluid" src="@_imageService.DecodeImage(item.ImageData, item.ContentType)" />
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Created)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |
-                        <a asp-controller="BlogPosts" asp-action="ChildIndex" asp-route-blogId="@item.Id">My Posts</a> |
-                        <a asp-controller="BlogPosts" asp-action="Create" asp-route-blogId="@item.Id">New Post</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>*@

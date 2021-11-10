@@ -37,57 +37,12 @@
                         </div>
                         <p>Frium has been the industry's standard dummy text ever since thewhen an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only fiveIpsum has been the industry's standard dummy text ever since printer took.</p>
                     </div>
-                    <div class="contact-address">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="address-info">
-                                    <div class="heading-layout3">
-                                        <h3 class="heading-title-md">Office Address 1</h3>
-                                    </div>
-                                    <ul>
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i>
-                                            29 Street, Melbourne City, Australia # 34 Road, House #10.
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-phone-volume"></i>
-                                            + (123) 6418 8990
-                                        </li>
-                                        <li>
-                                            <i class="far fa-envelope"></i>
-                                            info@gamex.com
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="address-info">
-                                    <div class="heading-layout3">
-                                        <h3 class="heading-title-md">Office Address 2</h3>
-                                    </div>
-                                    <ul>
-                                        <li>
-                                            <i class="fas fa-map-marker-alt"></i>
-                                            29 Street, Melbourne City, Australia # 34 Road, House #10.
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-phone-volume"></i>
-                                            + (123) 6418 8990
-                                        </li>
-                                        <li>
-                                            <i class="far fa-envelope"></i>
-                                            info@gamex.com
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                   
                     <div class="contact-form">
                         <div class="heading-layout3">
                             <h3 class="heading-title">Send Us Message</h3>
                         </div>
-                        <form id="contact-form">
+                        <form asp-action="ContactMe" asp-controller="Home">
                             <div class="row gutters-15">
                                 <div class="col-lg-4 form-group">
                                     <input type="text" placeholder="Name" class="form-control" name="name" data-error="Name field is required" required>
@@ -102,7 +57,7 @@
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="col-12 form-group">
-                                    <textarea placeholder="Message" class="textarea form-control" name="message" id="form-message" rows="7" cols="20" data-error="Message field is required" required></textarea>
+                                    <textarea placeholder="Message" class="textarea form-control" name="message"  rows="7" cols="20" data-error="Message field is required" required></textarea>
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="col-12 form-group">
@@ -116,14 +71,16 @@
             </div>
             <div class="col-xl-3 col-lg-4 sidebar-widget">
                 <div class="widget widget-search">
-                    <div class="input-group stylish-input-group">
-                        <input type="text" class="form-control" placeholder="Search Story . . .">
-                        <span class="input-group-addon">
-                            <button type="submit">
-                                <span class="flaticon-search" aria-hidden="true"></span>
-                            </button>
-                        </span>
-                    </div>
+                    <form asp-action="SearchPosts" asp-controller="BlogPosts">
+                        <div class="input-group stylish-input-group">
+                            <input type="text" name="searchTerm" class="form-control" placeholder="Search Story . . .">
+                            <span class="input-group-addon">
+                                <button type="submit">
+                                    <span class="flaticon-search" aria-hidden="true"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
                 </div>
                 <div class="widget widget-upcoming-post">
                     <div class="heading-layout1">

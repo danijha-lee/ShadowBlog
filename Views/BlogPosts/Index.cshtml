@@ -2,6 +2,7 @@
 @using X.PagedList
 @using X.PagedList.Mvc.Core
 @using ShadowBlog.Services.Interfaces
+@using X.PagedList.Web.Common
 @inject IImageService _imageService
 @{
     ViewData["Title"] = "Index";
@@ -14,10 +15,10 @@
         <div class="row">
             <div class="col-12">
                 <div class="breadcrumbs-area">
-                    <h1>Action Games Category</h1>
+                    <h1>All Blog Posts</h1>
                     <ul>
                         <li>
-                            <a href="index.html">Home</a>
+                            <a asp-action="Index" asp-controller="Home">Home</a>
                         </li>
                         <li>
                             <a href="#">Category</a>
@@ -50,85 +51,41 @@
                                     <li class="item-author"><i class="flaticon-user bg-green"></i><span>By</span><a asp-action="AboutMe" asp-controller="Home">Monae Lee</a></li>
                                 </ul>
                             </div>
-                            <h3 class="item-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-id="@item.Id"> @item.Title</a></h3>
+                            <h3 class="item-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@item.Slug"> @item.Title</a></h3>
                             <p>@item.Abstract</p>
-                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-id="@item.Id" class="btn-fill-md">READ POST</a>
+                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@item.Slug" class="btn-fill-md">READ POST</a>
+                            @if (User.IsInRole("Administrator"))
+                            {
+                                <a asp-action="Edit" asp-controller="BlogPosts" asp-route-id="@item.Id" class="btn-fill-md">EDIT POST</a>
+                            }
                         </div>
                     </div>
                 }
 
-                <div class="pagination-layout1">
-                    <ul>
-                        <li><a href="#" class="active">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                    </ul>
+                <div @*class="pagination-layout1"*@>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
+                new PagedListRenderOptions
+                {
+                    LiElementClasses = new string[] { "page-item" },
+                    PageClasses = new string[] { "page-link" }
+                })
+                   
                 </div>
             </div>
             <div class="col-xl-3 sidebar-widget-xl">
                 <div class="widget widget-search">
-                    <div class="input-group stylish-input-group">
-                        <input type="text" class="form-control" placeholder="Search Story . . .">
-                        <span class="input-group-addon">
-                            <button type="submit">
-                                <span class="flaticon-search" aria-hidden="true"></span>
-                            </button>
-                        </span>
-                    </div>
+                    <form asp-action="SearchPosts" asp-controller="BlogPosts">
+                        <div class="input-group stylish-input-group">
+                            <input type="text" name="searchTerm" class="form-control" placeholder="Search Story . . .">
+                            <span class="input-group-addon">
+                                <button type="submit">
+                                    <span class="flaticon-search" aria-hidden="true"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
                 </div>
-                <div class="widget widget-upcoming-post">
-                    <div class="heading-layout1">
-                        <h2 class="heading-title">Upcoming Games</h2>
-                    </div>
-                    <div class="post-list-layout2">
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="media/post/post7.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="media/post/post8.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="media/post/post9.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="media/post/post10.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="media/post/post8.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               
                 <div class="widget widget-social">
                     <div class="heading-layout1">
                         <h2 class="heading-title">Follow Us On</h2>

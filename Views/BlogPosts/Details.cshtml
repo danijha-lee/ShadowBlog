@@ -1,25 +1,22 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@using ShadowBlog.Data
 @using ShadowBlog.Services.Interfaces
 @using ShadowBlog.Services
 @using ShadowBlog.Enums
 @using ShadowBlog.Models
 
-@inject UserManager<BlogUser> _userManager
 @inject IImageService _imageService
-@inject ApplicationDbContext _context
+
 @inject BlogService _blogservice
 
 @model BlogPost
 @{
     ViewData["Title"] = "Details";
-    BlogUser blogUser = await _userManager.GetUserAsync(User);
-    //List<Blog> blogs =  _context.Blogs.ToList();
 }
+
 <!--=====================================-->
 <!--=           Inner Banner Start      =-->
 <!--=====================================-->
-<section class="inner-page-banner bg-common" data-bg-image="media/figure/banner1.jpg">
+<section class="inner-page-banner bg-common" data-bg-image="~/img/pexels-pixabay-163036.jpg">
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -27,7 +24,7 @@
                     <h1>Single Post</h1>
                     <ul>
                         <li>
-                            <a href="index.html">Home</a>
+                            <a asp-action="Index" asp-controller="Home">Home</a>
                         </li>
                         <li>Post Details</li>
                     </ul>
@@ -92,11 +89,12 @@
                                 Srem Ipsum is simply dummy text of the printing and typ esetting industry. Ipsum has been the industry's standard dummy text eorem Ipsum is simply the industry's standard .
                             </blockquote>*@
                         <p>@Model.Content</p>
-                        <ul class="related-tag">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Racing</a></li>
-                            <li><a href="#">Games</a></li>
-                        </ul>
+                        @foreach (Tag tag in Model.Tags)
+                        {
+                            <ul class="related-tag">
+                                <li><a asp-action="TagIndex" asp-route-tag="@tag.Text">@tag.Text</a></li>
+                            </ul>
+                        }
                     </div>
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -116,34 +114,26 @@
                                 </div>
                             </form>
                         </div>
-                    }
-                    else
-                    {
-                        <div class="row">
-                            <div class="col text-center">
-                                <a class="btn btn-lg btn-dark w-75" returnUrl="" asp-area="Identity" asp-page="/Account/Login">Login to add a comment!</a>
+
+                    @*<div class="item-author">
+                            <div class="media">
+                                <div class="item-img">
+                                    <img src="~/media/post/author.jpg" alt="Author">
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="item-title">Mark Willy</h3>
+                                    <div class="item-subtitle">CEO</div>
+                                    <p>Dorem Ipsum is simply dummy text of the printing and type area aawin gustry has been the industry's standardt.</p>
+                                    <ul class="item-social">
+                                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                        <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                        <li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
+                                        <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    }
-                    <div class="item-author">
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="~/media/post/author.jpg" alt="Author">
-                            </div>
-                            <div class="media-body">
-                                <h3 class="item-title">Mark Willy</h3>
-                                <div class="item-subtitle">CEO</div>
-                                <p>Dorem Ipsum is simply dummy text of the printing and type area aawin gustry has been the industry's standardt.</p>
-                                <ul class="item-social">
-                                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                        </div>*@
                     <div class="post-comments">
 
                         <div class="heading-layout3" id="fragComment">
@@ -156,13 +146,13 @@
                                     @if (comment.BlogUser.ImageData is not null)
                                     {
                                         <div class="item-img">
-                                            <img src="@_imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ImageType)" width="105" height="105" alt="User Image">
+                                            <img src="@_imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ImageType)" width="32" height="32" alt="User Image">
                                         </div>
                                     }
                                     else
                                     {
                                         <div class="item-img">
-                                            <img src="~/img/defualtAccountImage.jpg" width="105" height="105" alt="User Image">
+                                            <img src="~/img/defualtAccountImage.jpg" width="32" height="32" alt="User Image">
                                         </div>
                                     }
                                     @if (comment.Moderated is not null)
@@ -191,25 +181,36 @@
                             }
                         </div>
                     </div>
+                    }
+                    else
+                    {
+                        <div class="row mb-4">
+                            <div class="col text-center">
+                                <a class="btn btn-lg btn-dark w-75" returnUrl="" asp-area="Identity" asp-page="/Account/Login">Login to add a comment!</a>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
             <div class="col-xl-3 col-lg-4 sidebar-widget">
                 <div class="widget widget-search">
-                    <div class="input-group stylish-input-group">
-                        <input type="text" class="form-control" placeholder="Search Story . . .">
-                        <span class="input-group-addon">
-                            <button type="submit">
-                                <span class="flaticon-search" aria-hidden="true"></span>
-                            </button>
-                        </span>
-                    </div>
+                    <form asp-action="searchPosts" asp-controller="BlogPosts">
+                        <div class="input-group stylish-input-group">
+                            <input type="text" name="searchTerm" class="form-control" placeholder="Search . . .">
+                            <span class="input-group-addon">
+                                <button type="submit">
+                                    <span class="flaticon-search" aria-hidden="true"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
                 </div>
                 <div class="widget widget-archive">
                     <div class="heading-layout1">
                         <h3 class="heading-title">Blogs</h3>
                     </div>
                     <ul class="archive-list">
-                        @foreach (Blog blog in _context.Blogs.OrderBy(b => b.Created).Take(6))
+                        @foreach (Blog blog in await _blogservice.GetBlogDataAsync(6))
                         {
                             <li>
                                 <a asp-action="ChildIndex" asp-controller="BlogPosts" asp-route-id="@blog.Id"> @blog.Name <span> @_blogservice.CountPosts(blog.Id) </span></a>
@@ -261,113 +262,41 @@
                         </div>
                     </div>
                 </div>
-                <div class="widget widget-upcoming-post">
-                    <div class="heading-layout1">
-                        <h2 class="heading-title">Upcoming Games</h2>
-                    </div>
-                    <div class="post-list-layout2">
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="~/media/post/post7.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html"> Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="~/media/post/post8.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html"> Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="~/media/post/post9.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html"> Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                        <div class="media">
-                            <div class="item-img">
-                                <img src="~/media/post/post10.jpg" alt="Post">
-                            </div>
-                            <div class="media-body">
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html"> Hitlist ast Computer ar in the market ...</a></h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="widget widget-tags">
+                
+                @*<div class="widget widget-tags">
                     <div class="heading-layout1">
                         <h2 class="heading-title">Popular Tags</h2>
                     </div>
                     <ul class="tag-list">
                         <li>
                             <a href="#">
-                                Action </ a ></ li>
-                                < li >< a href="#">Racing
+                                Action
+                            </a></ li>
+                        <li>
+                            <a href="#">
+                                Racing
                             </a>
                         </li>
                         <li>
                             <a href="#">
                                 Mission </ a ></ li>
-                                < li >< a href="#">Wind
+                        <li>
+                            <a href="#">
+                                Wind
                             </a>
                         </li>
                         <li>
                             <a href="#">
-                                Animation </ a ></ li>
-                                < li >< a href="#">Cycling
+                                Animation
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Cycling
                             </a>
                         </li>
                     </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!--=====================================-->
-<!--=           Social Start = -->
-<!--===================================== -->
-<section class="social-box-wrap">
-    <div class="container-fluid full-width">
-        <div class="row no-gutters">
-            <div class="col-lg-2 col-sm-4 col-6">
-                <div class="social-box-img">
-                    <a href="#">< img src="~/media/social/social1.png" alt="Social"></a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-sm-4 col-6">
-                <div class="social-box-img">
-                    <a href="#">< img src="~/media/social/social2.png" alt="Social"></a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-sm-4 col-6">
-                <div class="social-box-img">
-                    <a href="#">< img src="~/media/social/social3.png" alt="Social"></a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-sm-4 col-6">
-                <div class="social-box-img">
-                    <a href="#">< img src="~/media/social/social4.png" alt="Social"></a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-sm-4 col-6">
-                <div class="social-box-img">
-                    <a href="#">< img src="~/media/social/social5.png" alt="Social"></a>
-                </div>
-            </div>
-            <div class="col-lg-2 col-sm-4 col-6">
-                <div class="social-box-img">
-                    <a href="#">< img src="~/media/social/social6.png" alt="Social"></a>
-                </div>
+                </div>*@
             </div>
         </div>
     </div>

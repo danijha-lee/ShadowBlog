@@ -80,6 +80,12 @@ namespace ShadowBlog
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "slugRoute",
+                    pattern: "MonaesBlog/PostDetails/{slug}",
+                    defaults: new { controller = "BlogPosts", action = "Details" }
+                    );
+
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
