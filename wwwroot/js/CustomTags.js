@@ -48,6 +48,20 @@ function DeleteTag() {
     return true;
 }
 
+if (tagValues != '') {
+    let tagArray = tagValues.split(",");
+    for (let loop = 0; loop < tagArray.length; loop++) {
+        ReplaceTag(tagArray[loop], loop);
+        index++;
+    }
+}
+
+function ReplaceTag(tag, index) {
+    let newTag = new Option(tag, tag);
+    document.getElementById("TagList").options[index] = newTag;
+}
+
+
 function Search(searchStr) {
     //First I want to make sure they gave me something in the Text tag
     if (searchStr == "") {

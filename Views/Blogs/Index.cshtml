@@ -58,6 +58,10 @@
                                     <p>
                                         @blog.Description
                                     </p>
+                                    @if (User.IsInRole("Administrator"))
+                                    {
+                                        <a asp-action="Edit" asp-controller="Blogs" asp-route-id="@blog.Id" class="btn-fill-md">EDIT BLOG</a>
+                                    }
                                 </div>
                             </div>
                         </div>

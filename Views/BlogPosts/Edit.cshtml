@@ -11,9 +11,14 @@
 <hr />
 <div class="row">
     <div class="col-md-4 offset-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" id="frmCreate" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Slug" />
+            <input type="hidden" asp-for="Created" />
+            <input type="hidden" asp-for="ImageData" />
+            <input type="hidden" asp-for="ImageType" />
+            
             @if (Model?.BlogId is > 0)
             {
                 <input type="hidden" asp-for="BlogId" />
@@ -26,15 +31,20 @@
                 </div>
 
             }
-            
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="Abstract" class="control-label"></label>
-                <input asp-for="Abstract" class="form-control" />
+                <textarea asp-for="Abstract" class="form-control"></textarea>
                 <span asp-validation-for="Abstract" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
+                <textarea asp-for="Content" class="form-control"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group border border-dark">
@@ -45,15 +55,15 @@
 
             <div class="form-group">
                 <label asp-for="ReadyStatus" class="control-label"></label>
-                <select asp-for="ReadyStatus" asp-items="@Html.GetEnumSelectList<ReadyState>()" class="form-control"></select>
+                <select asp-for="ReadyStatus" asp-items="@Html.GetEnumSelectList<ReadyState>()" class="form-control">Choose Option</select>
                 <span asp-validation-for="ReadyStatus" class="text-danger"></span>
             </div>
 
-            
             <div class="row">
                 <div class="col-6">
                     <div class="row mb-2">
                         <div class="col">
+                            <label>Add Tags</label>
                             <input id="tagEntry" type="text" class="form-control" />
                         </div>
                     </div>
@@ -67,13 +77,13 @@
                     </div>
                 </div>
                 <div class="col-6">
-                    <select class="w-100" name="TagValues" id="TagList" multiple>
+                    <select class="w-100" name="tagValues" id="TagList" multiple>
                         @*<option></option>*@
                     </select>
                 </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-secondary mt-3" />
             </div>
         </form>
     </div>
@@ -86,7 +96,8 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-<script src="~/js/CustomTags.js"></script>
+    <script>let tagValues = '@ViewData["TagValues"]'</script>
+    <script src="~/js/CustomTags.js"></script>
     <script>
         let fileInput = document.getElementById("Image");
         fileInput.onchange = evt => {

@@ -193,8 +193,8 @@ namespace ShadowBlog.Controllers
                 }
                 else
                 {
-                    blogPost.ImageData = await _imageService.EncodeImageAsync("NeonLightDefaultPostImage.jpg");
-                    blogPost.ImageType = "jpg";
+                    blogPost.ImageData = await _imageService.EncodeImageAsync("blogPostDefaultImage.png");
+                    blogPost.ImageType = "png";
                 }
 
                 blogPost.Created = DateTime.Now;
@@ -230,11 +230,13 @@ namespace ShadowBlog.Controllers
                 return NotFound();
             }
 
-            var blogPost = await _context.BlogPosts.FindAsync(id);
+            var blogPost = await _context.BlogPosts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == id);
+
             if (blogPost == null)
             {
                 return NotFound();
             }
+            ViewData["TagValues"] = string.Join(",", blogPost.Tags.Select(t => t.Text));
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", blogPost.BlogId);
             return View(blogPost);
         }
@@ -244,7 +246,7 @@ namespace ShadowBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,Created,ReadyStatus,Slug,ImageData,ImageType,Image")] BlogPost blogPost)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Content,Created,ReadyStatus,ImageData,ImageType,Slug,Image")] BlogPost blogPost, List<string> tagValues)
         {
             if (id != blogPost.Id)
             {
@@ -270,9 +272,37 @@ namespace ShadowBlog.Controllers
                             blogPost.Slug = slug;
                         }
                     }
+                    if (blogPost.Image is not null)
+                    {
+                        if (!_imageService.ValidImage(blogPost.Image))
+                        {
+                            //We need to add a custom Model Error and inform the user
+                            ModelState.AddModelError("Image", "Please choose a valid image");
+                            return View(blogPost);
+                        }
+                        else
+                        {
+                            blogPost.ImageData = await _imageService.EncodeImageAsync(blogPost.Image);
+                            blogPost.ImageType = _imageService.ContentType(blogPost.Image);
+                        }
+                    }
 
                     blogPost.Updated = DateTime.Now;
                     _context.Update(blogPost);
+                    await _context.SaveChangesAsync();
+
+                    BlogPost tempPost = await _context.BlogPosts.Include(p => p.Tags).FirstOrDefaultAsync(p => p.Id == blogPost.Id);
+                    _context.Tags.RemoveRange(tempPost.Tags);
+
+                    foreach (var tag in tagValues)
+                    {
+                        _context.Add(new Tag()
+                        {
+                            BlogPostId = blogPost.Id,
+                            Text = tag
+                        });
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -286,10 +316,11 @@ namespace ShadowBlog.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "BlogPosts", new { slug = blogPost.Slug });
             }
             ViewData["BlogId"] = new SelectList(_context.Blogs, "Id", "Description", blogPost.BlogId);
-            return View(blogPost);
+            // return View(blogPost);
+            return RedirectToAction("Details", "BlogPosts", new { slug = blogPost.Slug });
         }
 
         // GET: BlogPosts/Delete/5

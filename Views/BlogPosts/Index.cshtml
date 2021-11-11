@@ -52,7 +52,7 @@
                                 </ul>
                             </div>
                             <h3 class="item-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@item.Slug"> @item.Title</a></h3>
-                            <p>@item.Abstract</p>
+                            <p>@Html.Raw(item.Abstract)</p>
                             <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@item.Slug" class="btn-fill-md">READ POST</a>
                             @if (User.IsInRole("Administrator"))
                             {

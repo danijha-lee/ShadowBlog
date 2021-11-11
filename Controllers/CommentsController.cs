@@ -83,7 +83,7 @@ namespace ShadowBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int commentId, string body)
+        public async Task<IActionResult> Edit(int commentId, string body, string slug)
         {
             if (commentId == 0)
                 return NotFound();
@@ -94,7 +94,7 @@ namespace ShadowBlog.Controllers
                 comment.CommentBody = body;
                 comment.Updated = DateTime.Now;
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "BlogPosts", new { slug = comment.BlogPost.Slug }, "fragComment");
+                return RedirectToAction("Details", "BlogPosts", new { slug}, "fragComment");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -111,7 +111,7 @@ namespace ShadowBlog.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Moderate(int commentId, int moderationType, string moderatedBody)
+        public async Task<IActionResult> Moderate(int commentId, int moderationType, string moderatedBody, string slug)
         {
             var comment = await _context.Comment.FindAsync(commentId);
             comment.Moderated = DateTime.Now;
@@ -120,7 +120,7 @@ namespace ShadowBlog.Controllers
             comment.ModeratedBody = moderatedBody;
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Details", "BlogPosts", new { id = comment.BlogPostId });
+            return RedirectToAction("Details", "BlogPosts", new { slug = slug });
         }
 
         // GET: Comments/Delete/5

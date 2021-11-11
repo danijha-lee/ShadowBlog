@@ -77,14 +77,16 @@
             </div>
             <div class="col-xl-3 col-lg-4 sidebar-widget">
                 <div class="widget widget-search">
-                    <div class="input-group stylish-input-group">
-                        <input type="text" class="form-control" placeholder="Search Story . . .">
-                        <span class="input-group-addon">
-                            <button type="submit">
-                                <span class="flaticon-search" aria-hidden="true"></span>
-                            </button>
-                        </span>
-                    </div>
+                    <form asp-action="SearchPosts" asp-controller="BlogPosts">
+                        <div class="input-group stylish-input-group">
+                            <input type="text" name="searchTerm" class="form-control" placeholder="Search Story . . .">
+                            <span class="input-group-addon">
+                                <button type="submit">
+                                    <span class="flaticon-search" aria-hidden="true"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
                 </div>
                 <div class="widget widget-upcoming-post">
                     <div class="heading-layout1">
@@ -234,7 +236,7 @@
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
+                                <h4 class="post-title"><a href="single-post1.html">Hist ast Computer ar in the market ...</a></h4>
                             </div>
                         </div>
                     </div>

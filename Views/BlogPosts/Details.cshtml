@@ -42,6 +42,7 @@
             <div class="col-xl-9 col-lg-8">
                 <div class="single-post-layout1">
                     <div class="post-details">
+
                         <div class="post-img">
                             <img src="@_imageService.DecodeImage(Model.ImageData, Model.ImageType)" alt="Post Image">
                         </div>
@@ -88,13 +89,13 @@
                             <blockquote>
                                 Srem Ipsum is simply dummy text of the printing and typ esetting industry. Ipsum has been the industry's standard dummy text eorem Ipsum is simply the industry's standard .
                             </blockquote>*@
-                        <p>@Model.Content</p>
-                        @foreach (Tag tag in Model.Tags)
-                        {
-                            <ul class="related-tag">
+                        <p>@Html.Raw(Model.Content)</p>
+                        <ul class="related-tag">
+                            @foreach (Tag tag in Model.Tags)
+                            {
                                 <li><a asp-action="TagIndex" asp-route-tag="@tag.Text">@tag.Text</a></li>
-                            </ul>
-                        }
+                            }
+                        </ul>
                     </div>
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -115,72 +116,72 @@
                             </form>
                         </div>
 
-                    @*<div class="item-author">
-                            <div class="media">
-                                <div class="item-img">
-                                    <img src="~/media/post/author.jpg" alt="Author">
-                                </div>
-                                <div class="media-body">
-                                    <h3 class="item-title">Mark Willy</h3>
-                                    <div class="item-subtitle">CEO</div>
-                                    <p>Dorem Ipsum is simply dummy text of the printing and type area aawin gustry has been the industry's standardt.</p>
-                                    <ul class="item-social">
-                                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>*@
-                    <div class="post-comments">
-
-                        <div class="heading-layout3" id="fragComment">
-                            <h3 class="heading-title-md">@Model.Comments.Count() Comments</h3>
-                        </div>
-                        <div class="comment-box">
-                            @foreach (Comment comment in Model.Comments.OrderByDescending(c => c.Created))
-                            {
+                        @*<div class="item-author">
                                 <div class="media">
-                                    @if (comment.BlogUser.ImageData is not null)
-                                    {
-                                        <div class="item-img">
-                                            <img src="@_imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ImageType)" width="32" height="32" alt="User Image">
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="item-img">
-                                            <img src="~/img/defualtAccountImage.jpg" width="32" height="32" alt="User Image">
-                                        </div>
-                                    }
-                                    @if (comment.Moderated is not null)
-                                    {
-                                        <div class="media-body">
-                                            <h4 class="item-title">Moderated by @comment.Moderator.FullName ,<span>@comment.Updated?.ToString("dd MMMM, yyyy")</span></h4>
-                                            <p>@comment.CommentBody</p>
-                                            <a data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#editModal" class="reply-btn btnEdit">Edit</a>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="media-body">
-                                            <h4 class="item-title">@comment.BlogUser.FullName ,<span>@comment.Created.ToString("dd MMMM, yyyy")</span></h4>
-                                            <p>@comment.CommentBody</p>
-                                            <a data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#EditModal" class="reply-btn btnEdit">Edit</a>
-                                        </div>
-
-                                    }
-                                    @if (User.IsInRole("Moderator"))
-
-                                    {
-                                        <button class="btn btn-danger px-3 btnModerate btnModerate" data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#moderateModal">Moderate</button>
-                                    }
+                                    <div class="item-img">
+                                        <img src="~/media/post/author.jpg" alt="Author">
+                                    </div>
+                                    <div class="media-body">
+                                        <h3 class="item-title">Mark Willy</h3>
+                                        <div class="item-subtitle">CEO</div>
+                                        <p>Dorem Ipsum is simply dummy text of the printing and type area aawin gustry has been the industry's standardt.</p>
+                                        <ul class="item-social">
+                                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                            <li><a href="#"><i class="fab fa-google-plus-g"></i></a></li>
+                                            <li><a href="#"><i class="fab fa-pinterest-square"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            }
+                            </div>*@
+                        <div class="post-comments">
+
+                            <div class="heading-layout3" id="fragComment">
+                                <h3 class="heading-title-md">@Model.Comments.Count() Comments</h3>
+                            </div>
+                            <div class="comment-box">
+                                @foreach (Comment comment in Model.Comments.OrderByDescending(c => c.Created))
+                                {
+                                    <div class="media">
+                                        @if (comment.BlogUser.ImageData is not null)
+                                        {
+                                            <div class="item-img">
+                                                <img src="@_imageService.DecodeImage(comment.BlogUser.ImageData, comment.BlogUser.ImageType)" width="32" height="32" alt="User Image">
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="item-img">
+                                                <img src="~/img/defualtAccountImage.jpg" width="32" height="32" alt="User Image">
+                                            </div>
+                                        }
+                                        @if (comment.Moderated is not null)
+                                        {
+                                            <div class="media-body">
+                                                <h4 class="item-title">Moderated by @comment.Moderator.FullName ,<span>@comment.Updated?.ToString("dd MMMM, yyyy")</span></h4>
+                                                <p>@comment.CommentBody</p>
+                                                <a data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#editModal" class="reply-btn btnEdit">Edit</a>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="media-body">
+                                                <h4 class="item-title">@comment.BlogUser.FullName ,<span>@comment.Created.ToString("dd MMMM, yyyy")</span></h4>
+                                                <p>@comment.CommentBody</p>
+                                                <a data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#EditModal" class="reply-btn btnEdit">Edit</a>
+                                            </div>
+
+                                        }
+                                        @if (User.IsInRole("Moderator"))
+
+                                        {
+                                            <button class="btn btn-danger px-3 btnModerate" data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#moderateModal">Moderate</button>
+                                        }
+                                    </div>
+                                }
+                            </div>
                         </div>
-                    </div>
                     }
                     else
                     {
@@ -192,7 +193,12 @@
                     }
                 </div>
             </div>
+
             <div class="col-xl-3 col-lg-4 sidebar-widget">
+                @if (User.IsInRole("Administrator"))
+                {
+                    <a asp-action="Edit" asp-controller="BlogPosts" asp-route-id="@Model.Id" class="btn-fill-md mb-4">EDIT POST</a>
+                }
                 <div class="widget widget-search">
                     <form asp-action="searchPosts" asp-controller="BlogPosts">
                         <div class="input-group stylish-input-group">
@@ -213,7 +219,7 @@
                         @foreach (Blog blog in await _blogservice.GetBlogDataAsync(6))
                         {
                             <li>
-                                <a asp-action="ChildIndex" asp-controller="BlogPosts" asp-route-id="@blog.Id"> @blog.Name <span> @_blogservice.CountPosts(blog.Id) </span></a>
+                                <a asp-action="ChildIndex" asp-controller="BlogPosts" asp-route-id="@blog.Id"> @blog.Name <span>@_blogservice.CountPosts(blog.Id) </span></a>
                             </li>
 
                         }
@@ -262,41 +268,41 @@
                         </div>
                     </div>
                 </div>
-                
+
                 @*<div class="widget widget-tags">
-                    <div class="heading-layout1">
-                        <h2 class="heading-title">Popular Tags</h2>
-                    </div>
-                    <ul class="tag-list">
-                        <li>
-                            <a href="#">
-                                Action
-                            </a></ li>
-                        <li>
-                            <a href="#">
-                                Racing
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Mission </ a ></ li>
-                        <li>
-                            <a href="#">
-                                Wind
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Animation
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                Cycling
-                            </a>
-                        </li>
-                    </ul>
-                </div>*@
+                        <div class="heading-layout1">
+                            <h2 class="heading-title">Popular Tags</h2>
+                        </div>
+                        <ul class="tag-list">
+                            <li>
+                                <a href="#">
+                                    Action
+                                </a></ li>
+                            <li>
+                                <a href="#">
+                                    Racing
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Mission </ a ></ li>
+                            <li>
+                                <a href="#">
+                                    Wind
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Animation
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    Cycling
+                                </a>
+                            </li>
+                        </ul>
+                    </div>*@
             </div>
         </div>
     </div>
@@ -313,6 +319,7 @@
             <div class="modal-body">
                 <form asp-controller="Comments" asp-action="Edit">
                     <input type="hidden" id="ModalCommentId" name="CommentId" />
+                    <input type="hidden" name="Slug" value="@Model.Slug" />
                     <textarea id="ModalCommentBody" name="Body" rows="5" class="w-100"></textarea>
                     <button class="btn btn-dark w-100" type="submit">Submit</button>
                 </form>
@@ -332,7 +339,7 @@
             </div>
             <div class="modal-body">
                 <form asp-controller="Comments" asp-action="Moderate">
-                    <input type="hidden" id="ModerateModalCommentId" name="id" value="" />
+                    <input type="hidden" id="ModerateModalCommentId" name="CommentId" />
                     <select name="ModerationType" asp-items="@Html.GetEnumSelectList<ModType>()"></select>
                     <textarea id="ModalModeratedBody" name="ModeratedBody" rows="5" class="w-100"></textarea>
                     <button class="btn btn-danger w-100" type="submit">Submit</button>
@@ -361,7 +368,7 @@
         document.querySelectorAll("a.btnModerate").forEach(btn => {
             btn.addEventListener("click", function () {
                 document.getElementById("ModerateModalCommentId").value = this.getAttribute('data-UserCommentId');
-                let closestComment = this.closest("div.comment-comment").querySelector("p").textContent;
+                let closestComment = this.closest("comment-box").querySelector("p").textContent;
                 document.getElementById("ModalModeratedBody").textContent = closestComment;
             });
         });
