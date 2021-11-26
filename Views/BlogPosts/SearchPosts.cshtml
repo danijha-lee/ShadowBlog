@@ -17,15 +17,15 @@
         <div class="row">
             <div class="col-12">
                 <div class="breadcrumbs-area">
-                    <h1>Search Results</h1>
+                    <h1>Search Results For "@ViewBag.SearchTerm"</h1>
                     <ul>
                         <li>
                             <a asp-action="Index" asp-controller="Home">Home</a>
                         </li>
+                       
                         <li>
-                            <a href="#">Category</a>
+                       <a asp-action="Index" asp-controller="BlogPosts">Blog Posts</a>
                         </li>
-                        <li>Action</li>
                     </ul>
                 </div>
             </div>
@@ -51,14 +51,12 @@
                             <div class="post-meta">
                                 <ul>
                                     <li><i class="flaticon-clock"></i> @blogPost.Created.ToString("dd MMMM, yyyy")</li>
-                                    <li class="item-author"><i class="flaticon-user bg-blueviolet"></i><span>By</span><a href="#">Monae Lee</a></li>
+                                    <li class="item-author"><i class="flaticon-user bg-blueviolet"></i><span>By</span><a target="_blank " href="https://monaeleeportfolio.netlify.app">Monae Lee</a></li>
                                 </ul>
                             </div>
-                            <h2 class="item-title"><a href="#">@blogPost.Abstract</a></h2>
+                            <h2 class="item-title">@blogPost.Title</h2>
                             <p>
-                                Bhen an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only
-                                five centuri but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the
-                                with the release of Letraset sheets .
+                                @Html.Raw(blogPost.Abstract)
                             </p>
                             <a asp-action="Details" asp-controller="BlogPosts" asp-route-id="@blogPost.Id" class="btn-fill-md">READ MORE</a>
                         </div>
@@ -88,14 +86,14 @@
                         </div>
                     </form>
                 </div>
-                <div class="widget widget-upcoming-post">
+                @*<div class="widget widget-upcoming-post">
                     <div class="heading-layout1">
                         <h2 class="heading-title">Upcoming Games</h2>
                     </div>
                     <div class="post-list-layout2">
                         <div class="media">
                             <div class="item-img">
-                                <img src="media/post/post7.jpg" alt="Post">
+                                <img src="~/media/post/post7.jpg" alt="Post">
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
@@ -104,7 +102,7 @@
                         </div>
                         <div class="media">
                             <div class="item-img">
-                                <img src="media/post/post8.jpg" alt="Post">
+                                <img src="~/media/post/post8.jpg" alt="Post">
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
@@ -113,7 +111,7 @@
                         </div>
                         <div class="media">
                             <div class="item-img">
-                                <img src="media/post/post9.jpg" alt="Post">
+                                <img src="~/media/post/post9.jpg" alt="Post">
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
@@ -122,7 +120,7 @@
                         </div>
                         <div class="media">
                             <div class="item-img">
-                                <img src="media/post/post10.jpg" alt="Post">
+                                <img src="~/media/post/post10.jpg" alt="Post">
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
@@ -131,7 +129,7 @@
                         </div>
                         <div class="media">
                             <div class="item-img">
-                                <img src="media/post/post8.jpg" alt="Post">
+                                <img src="~/media/post/post8.jpg" alt="Post">
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
@@ -139,7 +137,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>*@
                 <div class="widget widget-social">
                     <div class="heading-layout1">
                         <h2 class="heading-title">Follow Us On</h2>
@@ -183,9 +181,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="widget widget-ad">
+                @*<div class="widget widget-ad">
                     <a href="#">
-                        <img src="media/figure/ad3.jpg" alt="Ad">
+                        <img src="~/media/figure/ad3.jpg" alt="Ad">
                     </a>
                 </div>
                 <div class="widget widget-most-viewed">
@@ -194,7 +192,7 @@
                     </div>
                     <div class="grid-post">
                         <div class="item-img">
-                            <img src="media/post/post28.jpg" alt="Post">
+                            <img src="~/media/post/post28.jpg" alt="Post">
                             <div class="item-tag bg-light">Scoccer</div>
                         </div>
                         <div class="item-content">
@@ -205,7 +203,7 @@
                     <div class="list-post">
                         <div class="media">
                             <div class="item-img">
-                                <img src="media/post/post7.jpg" alt="Post">
+                                <img src="~/media/post/post7.jpg" alt="Post">
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
@@ -214,7 +212,7 @@
                         </div>
                         <div class="media">
                             <div class="item-img">
-                                <img src="media/post/post8.jpg" alt="Post">
+                                <img src="~/media/post/post8.jpg" alt="Post">
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
@@ -223,7 +221,7 @@
                         </div>
                         <div class="media">
                             <div class="item-img">
-                                <img src="media/post/post9.jpg" alt="Post">
+                                <img src="~/media/post/post9.jpg" alt="Post">
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
@@ -232,7 +230,7 @@
                         </div>
                         <div class="media">
                             <div class="item-img">
-                                <img src="media/post/post10.jpg" alt="Post">
+                                <img src="~/media/post/post10.jpg" alt="Post">
                             </div>
                             <div class="media-body">
                                 <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
@@ -241,15 +239,15 @@
                         </div>
                     </div>
                     <a href="#" class="view-all-btn"><i class="flaticon-right-arrow"></i>View All Post</a>
-                </div>
+                </div>*@
                 
                 <div class="widget widget-newsletter">
                     <h3 class="item-title">Subscribe <span>Newsletter</span></h3>
                     <div class="item-subtitle">Get Latest Updates</div>
                     <div class="item-icon">
-                        <img src="media/figure/icon.png" alt="Message">
+                        <img src="~/media/figure/icon.png" alt="Message">
                     </div>
-                    <form>
+                    <form asp-action="Newsletter" asp-controller="Home" method="post">
                         <div class="form-group">
                             <input type="text" class="form-control" name="email" placeholder="Enter your mail">
                         </div>

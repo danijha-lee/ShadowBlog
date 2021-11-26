@@ -44,13 +44,14 @@ namespace ShadowBlog.Controllers
             var pageNumber = page ?? 1;
             var pageSize = 5;
             ViewData["SearchTerm"] = searchTerm;
+            
             var blogPosts = await _searchService.SearchAsync(searchTerm);
             if (blogPosts.Count == 0)
             {
                 ViewData["Message"] = "No Posts Found Matching your search term. Please try searching something else";
             }
 
-            return View("ChildIndex", await blogPosts.ToPagedListAsync(pageNumber, pageSize));
+            return View("SearchPosts", await blogPosts.ToPagedListAsync(pageNumber, pageSize));
         }
 
         public async Task<IActionResult> ChildIndex(int blogId, int? page)

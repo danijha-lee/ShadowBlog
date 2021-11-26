@@ -5,13 +5,10 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
 
-<h4>BlogPost</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4 offset-4">
-        <form asp-action="Edit" id="frmCreate" enctype="multipart/form-data">
+    <div class="col-md-4 offset-4 card mt-3">
+        <form asp-action="Edit" id="frmCreate" enctype="multipart/form-data" class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="Slug" />
@@ -89,7 +86,7 @@
     </div>
 </div>
 
-<div>
+<div class="offset-4">
     <a asp-action="Index">Back to List</a>
 </div>
 

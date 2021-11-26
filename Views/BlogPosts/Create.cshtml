@@ -5,13 +5,10 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
 
-<h4>BlogPost</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" id="frmCreate" enctype="multipart/form-data">
+    <div class="col-md-4 card offset-4 mt-3">
+        <form asp-action="Create" id="frmCreate" enctype="multipart/form-data" class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             @if (Model?.BlogId is > 0)
@@ -90,7 +87,7 @@
     </div>
 </div>
 
-<div>
+<div class="offset-4">
     <a asp-action="Index">Back to List</a>
 </div>
 

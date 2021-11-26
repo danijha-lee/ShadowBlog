@@ -11,26 +11,7 @@
     ViewData["Title"] = "Index";
 }
 
-<!--<section class="inner-page-banner bg-common" data-bg-image="media/figure/banner1.jpg">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="breadcrumbs-area">-->
-                    @*<h1>Racing Category</h1>
-                        <ul>
-                            <li>
-                                <a href="index.html">Home</a>
-                            </li>
-                            <li>
-                                <a href="#">Category</a>
-                            </li>
-                            <li>Action</li>
-                        </ul>*@
-                <!--</div>
-            </div>
-        </div>
-    </div>
-</section>-->
+
 <!--=====================================-->
 <!--=           Category Start        	=-->
 <!--=====================================-->
@@ -77,6 +58,12 @@
                 </div>
             </div>
             <div class="col-xl-3 sidebar-widget-xl">
+            @if (User.IsInRole("Administrator"))
+            {
+            
+                <a class="btn btn-secondary mb-3" asp-action="Create" asp-controller="Blogs">Add New Blog</a>
+            
+            }
                 <div class="widget widget-search">
                     <form asp-action="SearchPosts" asp-controller="BlogPosts">
                         <div class="input-group stylish-input-group">
