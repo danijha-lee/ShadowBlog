@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using ShadowBlog.Services;
 using X.PagedList;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace ShadowBlog.Controllers
 {
@@ -21,25 +22,33 @@ namespace ShadowBlog.Controllers
         private readonly IImageService _imageService;
         private readonly ISlugService _slugService;
         private readonly SearchService _searchService;
+        private readonly UserManager<BlogUser> _userManager;
 
         public BlogPostsController(ApplicationDbContext context,
                                     IImageService imageService,
                                     ISlugService slugService,
-                                    SearchService searchService)
+                                    SearchService searchService,
+                                    UserManager<BlogUser> userManager)
         {
             _context = context;
             _imageService = imageService;
             _slugService = slugService;
             _searchService = searchService;
+            _userManager = userManager;
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> SearchPosts(int? page, string searchTerm)
         {
             var pageNumber = page ?? 1;
             var pageSize = 5;
             ViewData["SearchTerm"] = searchTerm;
             var blogPosts = await _searchService.SearchAsync(searchTerm);
+            if (blogPosts.Count == 0)
+            {
+                ViewData["Message"] = "No Posts Found Matching your search term. Please try searching something else";
+            }
 
             return View("ChildIndex", await blogPosts.ToPagedListAsync(pageNumber, pageSize));
         }
@@ -89,6 +98,7 @@ namespace ShadowBlog.Controllers
         }
 
         // GET: BlogPosts/Details/5
+
         public async Task<IActionResult> Details(string slug)
         {
             if (string.IsNullOrEmpty(slug))
@@ -129,8 +139,8 @@ namespace ShadowBlog.Controllers
             return View(blogPosts);
         }
 
-        // GET: BlogPosts/Create
-        //[Authorize(Roles ="Administrator")]
+        //GET: BlogPosts/Create
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create(int? blogId)
         {
             if (blogId is not null)
@@ -222,7 +232,7 @@ namespace ShadowBlog.Controllers
         }
 
         // GET: BlogPosts/Edit/5
-        //[Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -287,6 +297,7 @@ namespace ShadowBlog.Controllers
                         }
                     }
 
+                    blogPost.BlogUser = await _userManager.GetUserAsync(User);
                     blogPost.Updated = DateTime.Now;
                     _context.Update(blogPost);
                     await _context.SaveChangesAsync();
@@ -324,7 +335,7 @@ namespace ShadowBlog.Controllers
         }
 
         // GET: BlogPosts/Delete/5
-        //[Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

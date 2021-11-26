@@ -26,6 +26,7 @@ namespace ShadowBlog.Controllers
 
         // GET: Comments
         [Authorize(Roles = "Moderator")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Comment.Include(c => c.BlogPost).Include(c => c.BlogUser).Include(c => c.Moderator);
@@ -120,7 +121,7 @@ namespace ShadowBlog.Controllers
             comment.ModeratedBody = moderatedBody;
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Details", "BlogPosts", new { slug = slug });
+            return RedirectToAction("Details", "BlogPosts", new { slug}, "fragComment");
         }
 
         // GET: Comments/Delete/5

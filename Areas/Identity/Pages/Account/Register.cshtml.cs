@@ -105,8 +105,8 @@ namespace ShadowBlog.Areas.Identity.Pages.Account
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
                     DisplayName = Input.DisplayName,
-                    ImageData = await _imageService.EncodeImageAsync("defaultUser.png"),
-                    ImageType = "png"
+                    ImageData = await _imageService.EncodeImageAsync("defualtAccountImage.jpg"),
+                    ImageType = "jpg"
                 };
 
                 //If and only if the user chose a custom image will we overwrite the default image

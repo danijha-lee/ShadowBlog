@@ -10,7 +10,7 @@
 <!--=====================================-->
 <!--=           Category Start        	=-->
 <!--=====================================-->
-<section class="inner-page-banner bg-common" data-bg-image="media/figure/banner1.jpg">
+@*<section class="inner-page-banner bg-common" style=" background: url(~/img/NotePadAndKeyBoard1920x301.jpg)" >
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-</section>
+</section>*@
 <!--=====================================-->
 <!--=           Category Start        	=-->
 <!--=====================================-->
@@ -41,8 +41,8 @@
                 {
                     <div class="post-list-layout3 align-items-center">
                         <div class="item-img">
-                            <img src="@_imageService.DecodeImage(item.ImageData, item.ImageType)" width="360" height="314" alt="Post Image">
-                            <div class="item-tag bg-blueviolet">@item.Blog.Name</div>
+                            <img src="~/img/blogPostDefaultImage.png" width="360" height="314" alt="Post Image">
+                            <div class="item-tag bg-orange">@item.Blog.Name</div>
                         </div>
                         <div class="item-content">
                             <div class="post-meta">
@@ -53,10 +53,10 @@
                             </div>
                             <h3 class="item-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@item.Slug"> @item.Title</a></h3>
                             <p>@Html.Raw(item.Abstract)</p>
-                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@item.Slug" class="btn-fill-md">READ POST</a>
+                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@item.Slug" class="btn-fill-md ">READ POST</a>
                             @if (User.IsInRole("Administrator"))
                             {
-                                <a asp-action="Edit" asp-controller="BlogPosts" asp-route-id="@item.Id" class="btn-fill-md">EDIT POST</a>
+                                <a asp-action="Edit" asp-controller="BlogPosts" asp-route-id="@item.Id" class="btn-fill-md ">EDIT POST</a>
                             }
                         </div>
                     </div>
@@ -129,11 +129,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="widget widget-ad">
-                    <a href="#">
-                        <img src="media/figure/ad3.jpg" alt="Ad">
-                    </a>
-                </div>
+                
                 <div class="widget widget-newsletter">
                     <h3 class="item-title">Subscribe <span>Newsletter</span></h3>
                     <div class="item-subtitle">Get Latest Updates</div>

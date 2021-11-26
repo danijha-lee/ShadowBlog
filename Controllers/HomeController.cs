@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -54,8 +55,9 @@ namespace ShadowBlog.Controllers
                 NewestCards = newestCards,
             };
 
-            return View(blogsvm);
+            return View( blogsvm);
         }
+
         public IActionResult ContactMe()
         {
             return View();
@@ -73,6 +75,19 @@ namespace ShadowBlog.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Newsletter(string email)
+        {
+            var subject = $"Thank you for Subscribing to our Newsletter";
+
+            var body = $"You will get the latest updates on our Blog!";
+
+            
+            await _emailService.SendEmailAsync(email, subject, body);
+            return RedirectToAction(nameof(Index));
+        }
+
+
         public IActionResult AboutMe()
         {
             return View();
@@ -88,5 +103,8 @@ namespace ShadowBlog.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        
+       
+       
     }
 }

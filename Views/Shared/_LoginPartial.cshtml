@@ -8,16 +8,16 @@
         var user = await UserManager.GetUserAsync(User);
 
         <li>
-            <a class="nav-link text-warning" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @user.DisplayName!</a>
+            <a asp-page="/Account/Manage/Index" asp-area="Identity"><i class="far fa-user text-danger"></i></a> <a class="nav-link text-danger" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @user.FirstName!</a>
         </li>
         <li>
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-warning">Logout</button>
+                <button type="submit" class="nav-link btn btn-link text-danger">Logout</button>
             </form>
         </li>
     }
     else
     {
-        <li><i class="far fa-user text-warning"></i><a asp-page="/Account/Login" asp-area="Identity">Log in</a> /<a asp-page="/Account/Register" asp-area="Identity"> Register</a></li>
+        <li><a asp-page="/Account/Manage/Index" asp-area="Identity"><i class="far fa-user text-danger"></i></a><a asp-page="/Account/Login" asp-area="Identity">Log in</a> /<a asp-page="/Account/Register" asp-area="Identity"> Register</a></li>
     }
 </ul>

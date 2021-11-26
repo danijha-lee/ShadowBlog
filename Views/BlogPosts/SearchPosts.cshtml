@@ -4,8 +4,6 @@
 @using ShadowBlog.Services.Interfaces
 @using X.PagedList.Web.Common
 @model IPagedList<BlogPost>
-
-@using ShadowBlog.Services.Interfaces
 @inject IImageService _imageService
 
 @{
@@ -43,6 +41,7 @@
             <div class="col-xl-9 col-lg-8">
                 @foreach (BlogPost blogPost in Model)
                 {
+                   
                     <div class="post-list-layout3 post-list6">
                         <div class="item-img">
                             <img src="@_imageService.DecodeImage(blogPost.ImageData, blogPost.ImageType)" alt="Post Image">
@@ -64,6 +63,7 @@
                             <a asp-action="Details" asp-controller="BlogPosts" asp-route-id="@blogPost.Id" class="btn-fill-md">READ MORE</a>
                         </div>
                     </div>
+                    
                 }
 
                 <div @*class="pagination-layout1"*@>

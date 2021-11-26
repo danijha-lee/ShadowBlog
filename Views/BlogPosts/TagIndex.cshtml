@@ -1,18 +1,12 @@
 ﻿@using ShadowBlog.Models
 @using X.PagedList
 @using X.PagedList.Mvc.Core
-@using ShadowBlog.Services.Interfaces
 @using X.PagedList.Web.Common
+@using ShadowBlog.Services
+@inject BasicImageService _imageService;
+
 @model IPagedList<BlogPost>
 
-@inject IImageService _imageService
-
-@{
-    ViewData["Title"] = "Home Page";
-}
-<!--=====================================-->
-<!--=           Category Start        	=-->
-<!--=====================================-->
 <section class="inner-page-banner bg-common" data-bg-image="media/figure/banner1.jpg">
     <div class="container">
         <div class="row">
@@ -40,8 +34,7 @@
     <div class="container">
         <div class="row gutters-40">
             <div class="col-xl-9 col-lg-8">
-                <h2>@ViewBag.Message</h2>
-                @foreach (BlogPost blogPost in Model)
+                @foreach (var blogPost in Model)
                 {
                     <div class="post-list-layout3 post-list6">
                         <div class="item-img">
@@ -79,7 +72,6 @@
                 </div>
             </div>
             <div class="col-xl-3 col-lg-4 sidebar-widget">
-               
                 <div class="widget widget-search">
                     <form asp-action="SearchPosts" asp-controller="BlogPosts">
                         <div class="input-group stylish-input-group">
@@ -136,14 +128,44 @@
                         </div>
                     </div>
                 </div>
-               
+                <div class="widget widget-ad">
+                    <a href="#">
+                        <img src="~/media/figure/ad3.jpg" alt="Ad">
+                    </a>
+                </div>
+
+                @*<div class="widget widget-archive">
+                        <div class="heading-layout1">
+                            <h3 class="heading-title">Archives</h3>
+                        </div>
+                        <ul class="archive-list">
+                            <li>
+                                <a href="#">April 2017<span>(12)</span></a>
+                            </li>
+                            <li>
+                                <a href="#">March 2017<span>(4)</span></a>
+                            </li>
+                            <li>
+                                <a href="#">February 2017 <span>(11)</span></a>
+                            </li>
+                            <li>
+                                <a href="#">April 2015<span>(79)</span></a>
+                            </li>
+                            <li>
+                                <a href="#">March 2015<span>(4)</span></a>
+                            </li>
+                            <li>
+                                <a href="#">February 2015<span>(11)</span></a>
+                            </li>
+                        </ul>
+                    </div>*@
                 <div class="widget widget-newsletter">
                     <h3 class="item-title">Subscribe <span>Newsletter</span></h3>
                     <div class="item-subtitle">Get Latest Updates</div>
                     <div class="item-icon">
                         <img src="~/media/figure/icon.png" alt="Message">
                     </div>
-                    <form asp-action="Newsletter" asp-controller="Home">
+                    <form>
                         <div class="form-group">
                             <input type="text" class="form-control" name="email" placeholder="Enter your mail">
                         </div>
