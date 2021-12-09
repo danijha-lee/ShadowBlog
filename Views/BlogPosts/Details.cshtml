@@ -3,6 +3,7 @@
 @using ShadowBlog.Services
 @using ShadowBlog.Enums
 @using ShadowBlog.Models
+@inject UserManager<BlogUser> _userManager
 
 @inject IImageService _imageService
 
@@ -11,6 +12,8 @@
 @model BlogPost
 @{
     ViewData["Title"] = "Details";
+    BlogUser user = await _userManager.GetUserAsync(User);
+
 }
 
 
@@ -18,24 +21,24 @@
 <!--=           Inner Banner Start      =-->
 <!--=====================================-->
 @*<section class="inner-page-banner bg-common" data-bg-image="media/figure/banner1.jpg">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="breadcrumbs-area">
-                    <h1>@Model.Title</h1>
-                    <ul>
-                        <li>
-                            <a asp-action="Index" asp-controller="Home">Home</a>
-                        </li>
-                        <li>
-                        <a asp-action="Index" asp-controller="Blogs">Blogs</a>
-                        </li>
-                    </ul>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumbs-area">
+                        <h1>@Model.Title</h1>
+                        <ul>
+                            <li>
+                                <a asp-action="Index" asp-controller="Home">Home</a>
+                            </li>
+                            <li>
+                            <a asp-action="Index" asp-controller="Blogs">Blogs</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>*@
+    </section>*@
 <!--=====================================-->
 <!--=         Single Post Start        	=-->
 <!--=====================================-->
@@ -43,7 +46,7 @@
     <div class="container">
         <div class="single-post-layout2">
             <div class="post-details">
-                @if (User.IsInRole("Administrator"))
+                @if (User.IsInRole("Administrator") )
                 {
                     <a asp-action="Edit" asp-controller="BlogPosts" asp-route-id="@Model.Id" class="btn-fill-md mb-4 justify-content-end">EDIT POST</a>
                 }
@@ -69,33 +72,22 @@
                                                 <div class="author-name"><a target="_blank " href="https://monaeleeportfolio.netlify.app">Monae Lee</a></div>
                                             </div>
                                         </li>
-                                        <li class="meta-action"><i class="flaticon-heart"></i>2,350</li>
-                                        <li class="meta-action"><i class="flaticon-comment-white-oval-bubble"></i>@Model.Comments.Count</li>
+                                        
+                                        <li class="meta-action"><a href="#fragComment"><i class="flaticon-comment-white-oval-bubble"></i></a>@Model.Comments.Where(c => c.Deleted == null).Count()</li>
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-lg-5">
-                                <div class="social-share">
-                                    <label>Share</label>
-                                    <ul>
-                                        <li><a href="#" class="bg-fb"><i class="fab fa-facebook-f"></i></a></li>
-                                        <li><a href="#" class="bg-twitter"><i class="fab fa-twitter"></i></a></li>
-                                        <li><a href="#" class="bg-linked"><i class="fab fa-linkedin-in"></i></a></li>
-                                        <li><a href="#" class="bg-google-plus"><i class="fab fa-google-plus-g"></i></a></li>
-                                        <li><a href="#" class="bg-pinterst"><i class="fab fa-pinterest-square"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                     <p>@Html.Raw(Model.Content)</p>
 
-                    <ul class="related-tag">
+                    @*<ul class="related-tag">
                         @foreach (Tag tag in Model.Tags)
                         {
                             <li><a asp-action="TagIndex" asp-route-tag="@tag.Text">@tag.Text</a></li>
                         }
-                    </ul>
+                    </ul>*@
                 </div>
             </div>
             @if (User.Identity.IsAuthenticated)
@@ -107,8 +99,8 @@
                     <form asp-controller="Comments" asp-action="Create">
                         <input type="hidden" name="BlogPostId" value="@Model.Id" />
                         <div class="row gutters-2">
-                            <div class="col-lg-4 form-group border">
-                                <textarea name="CommentBody" class="form-control" rows="5"></textarea>
+                            <div class="col-lg-6 form-group border">
+                                <textarea name="CommentBody" id="Content" class="form-control" rows="5"></textarea>
                             </div>
                             <div class="col-lg-12 form-group ">
                                 <button type="submit" class="submit-btn">SUBMIT NOW</button>
@@ -139,10 +131,10 @@
                 <div class="post-comments">
 
                     <div class="heading-layout3" id="fragComment">
-                        <h3 class="heading-title-md">@Model.Comments.Count() Comments</h3>
+                        <h3 class="heading-title-md">@Model.Comments.Where(c => c.Deleted == null).Count() Comments</h3>
                     </div>
                     <div class="comment-box">
-                        @foreach (Comment comment in Model.Comments.OrderByDescending(c => c.Created))
+                        @foreach (Comment comment in Model.Comments.OrderBy(c => c.Created).Where(c => c.Deleted == null))
                         {
                             <div class="media">
                                 @if (comment.BlogUser.ImageData is not null)
@@ -159,29 +151,31 @@
                                 }
                                 @if (comment.Moderated is not null)
                                 {
-                                    <div class="media-body">
-                                        <h4 class="item-title">Moderated by @comment.Moderator.FullName ,<span>@comment.Updated?.ToString("dd MMMM, yyyy")</span></h4>
-                                        <p>@comment.ModeratedBody</p>
-                                        <a data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#editModal" class="reply-btn btnEdit">Edit</a>
-                                        @if (User.IsInRole("Moderator"))
-                                        {
-                                            <button class="btn btn-danger px-3 btnModerate" data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#moderateModal">Moderate</button>
-                                        }
-
-                                    </div>
+                            <div class="media-body">
+                                <h4 class="item-title">Moderated by @comment.Moderator.FullName ,<span>@comment.Updated?.ToString("dd MMMM, yyyy")</span></h4>
+                                <h6>Original Comment By: @comment.BlogUser.FullName on @comment.Created.ToString("dd MMM, yyyy").</h6>
+                                <p>@Html.Raw(comment.ModeratedBody)</p>
+                                <a class="btn btn-danger" asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.Id">Delete</a>
+                            </div>
                                 }
                                 else
                                 {
-                                    <div class="media-body">
-                                        <h4 class="item-title">@comment.BlogUser.FullName ,<span>@comment.Created.ToString("dd MMMM, yyyy")</span></h4>
-                                        <p>@comment.CommentBody</p>
-                                        <a data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#EditModal" class="reply-btn btnEdit">Edit</a>
-                                        @if (User.IsInRole("Moderator"))
-                                        {
-                                            <button class="btn btn-danger px-3 btnModerate" data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#moderateModal">Moderate</button>
-                                        }
+                            <div class="media-body">
+                                <h4 class="item-title">@comment.BlogUser.FullName ,<span>@comment.Created.ToString("dd MMMM, yyyy")</span></h4>
+                                <p>@Html.Raw(comment.CommentBody)</p>
+                                @if (user.Id == comment.BlogUserId)
+                                {
 
-                                    </div>
+                                    <a data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#EditModal" class="reply-btn btnEdit">Edit</a>
+                                    
+                                }
+                                @if (User.IsInRole("Moderator") || User.IsInRole("Administrator"))
+                                {
+                                    <button class="btn btn-danger px-3 btnModerate" data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#moderateModal">Moderate</button>
+                                    <a class="btn btn-danger" asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.Id">Delete</a>
+                                }
+
+                            </div>
 
                                 }
                             </div>
@@ -215,7 +209,7 @@
                 <form asp-controller="Comments" asp-action="Edit">
                     <input type="hidden" id="ModalCommentId" name="CommentId" />
                     <input type="hidden" name="Slug" value="@Model.Slug" />
-                    <textarea id="ModalCommentBody" name="Body" rows="5" class="w-100"></textarea>
+                    <textarea id="ModalCommentBody" placeholder="" name="Body" rows="5" class="w-100"></textarea>
                     <button class="btn btn-dark w-100" type="submit">Submit</button>
                 </form>
             </div>
@@ -255,7 +249,7 @@
         document.querySelectorAll("a.btnEdit").forEach(btn => {
             btn.addEventListener("click", function () {
                 //Transfer the value of the button's data-UserCommentId to the Modals hidden input
-                document.getElementById("ModalCommentId").value = this.getAttribute("data-UserCommentId");
+                document.getElementById("ModalCommentId").value = parseInt( this.getAttribute("data-UserCommentId"));
                 //I need to use JS to get the comment closest to the button i just clicked
                 let closestComment = this.closest("comment-box").querySelector("p").textContent;
                 document.getElementById("ModalCommentBody").textContent = closestComment;

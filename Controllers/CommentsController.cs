@@ -95,7 +95,7 @@ namespace ShadowBlog.Controllers
                 comment.CommentBody = body;
                 comment.Updated = DateTime.Now;
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "BlogPosts", new { slug}, "fragComment");
+                return RedirectToAction("Details", "BlogPosts", new { slug }, "fragComment");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -121,7 +121,7 @@ namespace ShadowBlog.Controllers
             comment.ModeratedBody = moderatedBody;
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Details", "BlogPosts", new { slug}, "fragComment");
+            return RedirectToAction("Details", "BlogPosts", new { slug }, "fragComment");
         }
 
         // GET: Comments/Delete/5
@@ -148,12 +148,13 @@ namespace ShadowBlog.Controllers
         // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, string slug)
         {
             var comment = await _context.Comment.FindAsync(id);
-            _context.Comment.Remove(comment);
+            comment.Deleted = DateTime.Now;
+            _context.Update(comment);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "BlogPosts", new { slug });
         }
 
         private bool CommentExists(int id)

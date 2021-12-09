@@ -5,13 +5,14 @@
     ViewData["Title"] = "Log in";
 }
 
-<h1 class="offset-1">@ViewData["Title"]</h1>
+
 <div class="row">
-    <div class="col-md-4 offset-1 mt-2">
-        <section>
+    <div class="col-md-4  mt-2 offset-4 mb-5 ">
+        <section class="card">
+            <div class="card-body">
+                <h4>Welcome Back! </h4>
             <form id="account" method="post">
-                <h4>Use a local account to log in.</h4>
-                <hr />
+                
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Input.Email"></label>
@@ -32,20 +33,19 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Log in</button>
+                    <p>
+                        <a class="btn btn-sm btn-secondary" id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                        <br />
+                        <a class="btn btn-sm btn-secondary mt-2" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                        <br />
+                        <a class="btn btn-sm btn-secondary mt-2" id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                    </p>
                 </div>
                 <div class="form-group">
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
+                    <button type="submit" class="btn btn-primary">Log in</button>
                 </div>
             </form>
+         </div>
         </section>
     </div>
     @*<div class="col-md-6 col-md-offset-2">

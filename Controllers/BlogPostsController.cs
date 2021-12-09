@@ -44,7 +44,7 @@ namespace ShadowBlog.Controllers
             var pageNumber = page ?? 1;
             var pageSize = 5;
             ViewData["SearchTerm"] = searchTerm;
-            
+
             var blogPosts = await _searchService.SearchAsync(searchTerm);
             if (blogPosts.Count == 0)
             {
@@ -111,7 +111,9 @@ namespace ShadowBlog.Controllers
                 .Include(b => b.Blog)
                 .Include(b => b.Tags)
                 .Include(b => b.Comments)
-                .ThenInclude(c => c.BlogUser)
+                    .ThenInclude(c => c.Moderator)
+                .Include(b => b.Comments)
+                    .ThenInclude(c => c.BlogUser)
                 .FirstOrDefaultAsync(m => m.Slug == slug);
 
             if (blogPost == null)

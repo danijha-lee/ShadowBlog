@@ -2,7 +2,7 @@
 @using ShadowBlog.Services.Interfaces
 @inject IImageService _imageService
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Index";
 
 
 }
@@ -36,63 +36,77 @@
     <section class="main-banner-wrap dark-overlay2 bg-common" data-bg-image="img/ColorfulDripPaint1920x701.jpg">
         <div class="container">
             <div class="row gutters-2">
+        @foreach(BlogPost blogPost in Model.NewestCards.SidePostCards.Skip(7).Take(1)) { 
                 <div class="col-lg-6">
                     <div class="post-grid-layout3 post-grid14">
                         <div class="post-img">
-                            <img src="~/img/Man1And0OnFace635x518.jpg" alt="Games">
+                            <img src="~/img/Man1And0OnFace635x518.jpg" alt="Blog Post">
                         </div>
                         <div class="post-content">
-                            <div class="item-category bg-green">Action</div>
-                            <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                            <h2 class="post-title"><a href="single-post1.html">Play This Game for Free on Steamery are weekend games</a></h2>
+                            <div class="item-category bg-green">@blogPost.Blog.Name</div>
+                            <div class="post-date"><i class="flaticon-clock"></i> @blogPost.Created.ToString("dd MMMM, yyyy")</div>
+                            <h2 class="post-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">@blogPost.Title</a></h2>
                         </div>
                     </div>
-                </div>
+                </div>}
                 <div class="col-lg-6">
                     <div class="row gutters-2">
                         <div class="col-sm-6">
+                            @foreach (BlogPost blogPost1 in Model.NewestCards.SidePostCards.Skip(8).Take(1))
+                            {
                             <div class="post-grid-layout3 post-grid13">
                                 <div class="post-img">
                                     <img src="~/img/BasicCupOfCoffee319x260.jpg" alt="Games">
                                 </div>
                                 <div class="post-content">
-                                    <div class="item-category bg-green">Action</div>
-                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                    <h3 class="post-title"><a href="single-post1.html">Game are Computery in the market.</a></h3>
+                                    <div class="item-category bg-green">New!</div>
+                                    <div class="post-date"><i class="flaticon-clock"></i> @blogPost1.Created.ToString("dd MMM yyyy")</div>
+                                    <h3 class="post-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost1.Slug">@blogPost1.Title</a></h3>
                                 </div>
                             </div>
+                            }
+                            @foreach (BlogPost blogPost4 in Model.NewestCards.SidePostCards.Skip(9).Take(1))
+                            {
                             <div class="post-grid-layout3 post-grid13">
                                 <div class="post-img">
                                     <img src="~/img/GirlHandsInAirLaptopInLap319x260.jpg" alt="Games">
                                 </div>
                                 <div class="post-content">
-                                    <div class="item-category bg-dodger-blue">Animation</div>
-                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                    <h3 class="post-title"><a href="single-post1.html">Hitlist ast Computery in the market.</a></h3>
+                                    <div class="item-category bg-dodger-blue">New!</div>
+                                    <div class="post-date"><i class="flaticon-clock"></i> @blogPost4.Created.ToString("dd MMM,yyyy")</div>
+                                    <h3 class="post-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost4.Slug">@blogPost4.Title</a></h3>
                                 </div>
                             </div>
+                            }
                         </div>
                         <div class="col-sm-6">
+                            @foreach (BlogPost blogPost5 in Model.NewestCards.SidePostCards.Skip(10).Take(1))
+                            {
                             <div class="post-grid-layout3 post-grid13">
                                 <div class="post-img">
                                     <img src="~/img/WomanLookingAtLaptop319x260.jpg" alt="Games">
                                 </div>
                                 <div class="post-content">
-                                    <div class="item-category bg-blueviolet">Football</div>
-                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                    <h3 class="post-title"><a href="single-post1.html">Game are Computery in the market.</a></h3>
+                                    <div class="item-category bg-blueviolet">New!</div>
+                                    <div class="post-date"><i class="flaticon-clock"></i>@blogPost5.Created.ToString("dd MMM, yyyy")</div>
+                                    <h3 class="post-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost5.Slug">@blogPost5.Title</a></h3>
                                 </div>
                             </div>
+                            }
+                            @foreach (BlogPost blogPost6 in Model.NewestCards.SidePostCards.Skip(11).Take(1))
+                            {
+
                             <div class="post-grid-layout3 post-grid13">
                                 <div class="post-img">
                                     <img src="~/img/confusedWoman319x260.jpg" alt="Games">
                                 </div>
                                 <div class="post-content">
-                                    <div class="item-category bg-orange">Mission</div>
-                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                    <h3 class="post-title"><a href="single-post1.html">Hitlist ast Computery in the market.</a></h3>
+                                    <div class="item-category bg-orange">New!</div>
+                                    <div class="post-date"><i class="flaticon-clock"></i> @blogPost6.Created.ToString("dd MMM,yyyy")</div>
+                                    <h3 class="post-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost6.Slug">@blogPost6.Title</a></h3>
                                 </div>
                             </div>
+                            }
                         </div>
                     </div>
                 </div>
