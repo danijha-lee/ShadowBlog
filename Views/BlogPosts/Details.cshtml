@@ -16,7 +16,6 @@
 
 }
 
-
 <!--=====================================-->
 <!--=           Inner Banner Start      =-->
 <!--=====================================-->
@@ -46,12 +45,12 @@
     <div class="container">
         <div class="single-post-layout2">
             <div class="post-details">
-                @if (User.IsInRole("Administrator") )
+                @if (User.IsInRole("Administrator"))
                 {
                     <a asp-action="Edit" asp-controller="BlogPosts" asp-route-id="@Model.Id" class="btn-fill-md mb-4 justify-content-end">EDIT POST</a>
                 }
-                <div class="post-img shadow shadow-lg" >
-                    <img src="@_imageService.DecodeImage(Model.ImageData, Model.ImageType)" width="540" height="250" alt="Post">
+                <div class="post-img shadow shadow-lg">
+                    <img src="@_imageService.DecodeImage(Model.ImageData, Model.ImageType)" width="250" height="125" alt="Post">
                 </div>
                 <div class="post-content">
                     <h2 class="post-title">
@@ -72,22 +71,21 @@
                                                 <div class="author-name"><a target="_blank " href="https://monaeleeportfolio.netlify.app">Monae Lee</a></div>
                                             </div>
                                         </li>
-                                        
+
                                         <li class="meta-action"><a href="#fragComment"><i class="flaticon-comment-white-oval-bubble"></i></a>@Model.Comments.Where(c => c.Deleted == null).Count()</li>
                                     </ul>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
                     <p>@Html.Raw(Model.Content)</p>
 
                     @*<ul class="related-tag">
-                        @foreach (Tag tag in Model.Tags)
-                        {
-                            <li><a asp-action="TagIndex" asp-route-tag="@tag.Text">@tag.Text</a></li>
-                        }
-                    </ul>*@
+                            @foreach (Tag tag in Model.Tags)
+                            {
+                                <li><a asp-action="TagIndex" asp-route-tag="@tag.Text">@tag.Text</a></li>
+                            }
+                        </ul>*@
                 </div>
             </div>
             @if (User.Identity.IsAuthenticated)
@@ -151,31 +149,30 @@
                                 }
                                 @if (comment.Moderated is not null)
                                 {
-                            <div class="media-body">
-                                <h4 class="item-title">Moderated by @comment.Moderator.FullName ,<span>@comment.Updated?.ToString("dd MMMM, yyyy")</span></h4>
-                                <h6>Original Comment By: @comment.BlogUser.FullName on @comment.Created.ToString("dd MMM, yyyy").</h6>
-                                <p>@Html.Raw(comment.ModeratedBody)</p>
-                                <a class="btn btn-danger" asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.Id">Delete</a>
-                            </div>
+                                    <div class="media-body">
+                                        <h4 class="item-title">Moderated by @comment.Moderator.FullName ,<span>@comment.Updated?.ToString("dd MMMM, yyyy")</span></h4>
+                                        <h6>Original Comment By: @comment.BlogUser.FullName on @comment.Created.ToString("dd MMM, yyyy").</h6>
+                                        <p>@Html.Raw(comment.ModeratedBody)</p>
+                                        <a class="btn btn-danger" asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.Id">Delete</a>
+                                    </div>
                                 }
                                 else
                                 {
-                            <div class="media-body">
-                                <h4 class="item-title">@comment.BlogUser.FullName ,<span>@comment.Created.ToString("dd MMMM, yyyy")</span></h4>
-                                <p>@Html.Raw(comment.CommentBody)</p>
-                                @if (user.Id == comment.BlogUserId)
-                                {
+                                    <div class="media-body">
+                                        <h4 class="item-title">@comment.BlogUser.FullName ,<span>@comment.Created.ToString("dd MMMM, yyyy")</span></h4>
+                                        <p>@Html.Raw(comment.CommentBody)</p>
+                                        @if (user.Id == comment.BlogUserId)
+                                        {
 
-                                    <a data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#EditModal" class="reply-btn btnEdit">Edit</a>
-                                    
-                                }
-                                @if (User.IsInRole("Moderator") || User.IsInRole("Administrator"))
-                                {
-                                    <button class="btn btn-danger px-3 btnModerate" data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#moderateModal">Moderate</button>
-                                    <a class="btn btn-danger" asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.Id">Delete</a>
-                                }
+                                            <a data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#EditModal" class="reply-btn btnEdit">Edit</a>
 
-                            </div>
+                                        }
+                                        @if (User.IsInRole("Moderator") || User.IsInRole("Administrator"))
+                                        {
+                                            <button class="btn btn-danger px-3 btnModerate" data-UserCommentId="@comment.Id" data-toggle="modal" data-target="#moderateModal">Moderate</button>
+                                            <a class="btn btn-danger" asp-action="Delete" asp-controller="Comments" asp-route-id="@comment.Id">Delete</a>
+                                        }
+                                    </div>
 
                                 }
                             </div>
@@ -249,7 +246,7 @@
         document.querySelectorAll("a.btnEdit").forEach(btn => {
             btn.addEventListener("click", function () {
                 //Transfer the value of the button's data-UserCommentId to the Modals hidden input
-                document.getElementById("ModalCommentId").value = parseInt( this.getAttribute("data-UserCommentId"));
+                document.getElementById("ModalCommentId").value = parseInt(this.getAttribute("data-UserCommentId"));
                 //I need to use JS to get the comment closest to the button i just clicked
                 let closestComment = this.closest("comment-box").querySelector("p").textContent;
                 document.getElementById("ModalCommentBody").textContent = closestComment;
