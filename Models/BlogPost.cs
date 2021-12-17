@@ -11,8 +11,16 @@ namespace ShadowBlog.Models
 {
     public class BlogPost
     {
+        /// <summary>
+        /// Primary Key
+        /// </summary>
+        /// <remarks>This Is the Id that is stored in the database</remarks>
+
         public int Id { get; set; }
 
+        /// <summary>
+        /// Foreign Key
+        /// </summary>
         //The Foreign Key (FK)
         public int BlogId { get; set; }
 

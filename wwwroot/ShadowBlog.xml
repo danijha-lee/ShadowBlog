@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ShadowBlog</name>
+    </assembly>
+    <members>
+        <member name="M:ShadowBlog.Controllers.APIContollers.PostsServiceController.GetTopXPosts(System.Int32)">
+            <summary>
+            Allow A Consumer to request the lastest x number of blogPosts
+            </summary>
+            <param name="num"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ShadowBlog.Models.BlogPost.Id">
+            <summary>
+            Primary Key
+            </summary>
+            <remarks>This Is the Id that is stored in the database</remarks>
+        </member>
+        <member name="P:ShadowBlog.Models.BlogPost.BlogId">
+            <summary>
+            Foreign Key
+            </summary>
+        </member>
+    </members>
+</doc>
