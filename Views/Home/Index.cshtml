@@ -115,190 +115,12 @@
     </section>
 
     <!--=====================================-->
-    <!--=        Slider Area Start      	=-->
-    <!--=====================================-->
-    @*<div class="slider-area slider-layout2 dark-overlay">
-            <div class="bend niceties preview-1">
-                <div id="ensign-nivoslider-1" class="slides">
-                    <img src="~/img/1920x701Keyboard.jpg" alt="slider" title="#slider-direction-1" />
-                    <img src="~/img/1920x701Code.jpg" alt="slider" title="#slider-direction-2" />
-                    <img src="~/img/1920x701Macbook.jpg" alt="slider" title="#slider-direction-3" />
-                </div>
-                <div id="slider-direction-1" class="t-cn slider-direction">
-                    <div class="slider-content s-tb slide-1">
-                        <div class="text-left title-container s-tb-c">
-                            <div class="container">
-                                <div class="row align-items-center">
-                                    @foreach (Blog blog in Model.NewestCards.SideCards.Take(1))
-                                    {
-                                    <div class="col-lg-9">
-                                        <div class="item-category bg-green">New!</div>
-                                        <div class="item-date"><i class="flaticon-clock"></i>@blog.Created.ToString("ded MMMM, yyyy")</div>
-                                        <h1 class="item-title"><a asp-action="ChildIndex" asp-controller="BlogPosts" asp-route-blogId="@blog.Id" >@blog.Name</a></h1>
-                                        <div class="item-paragraph">@Html.Raw(blog.Description)</div>
-                                        <div class="post-meta-light">
-                                            <ul>
-                                                <li class="post-author">
-                                                    <div class="author-icon bg-blueviolet">
-                                                        <i class="flaticon-user"></i>
-                                                    </div>
-                                                    <div class="author-content">
-                                                        <div class="item-text">Posted by</div>
-                                                        <div class="author-name"><a target="_blank " href="https://monaeleeportfolio.netlify.app">Monae Lee</a></div>
-                                                    </div>
-                                                </li>
-                                                <li class="meta-action"><i class="flaticon-heart"></i>2,363</li>
-                                                <li class="meta-action"><i class="flaticon-comment-white-oval-bubble"></i>1,853</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="post-list-layout2">
-                                            @foreach (BlogPost blogPost in blog.BlogPosts.Take(4))
-                                            {
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <div class="post-date"><i class="flaticon-clock"></i>@blogPost.Created.ToString("dd MMMM,yyyy")</div>
-                                                    <h4 class="post-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">@blogPost.Title</a></h4>
-                                                </div>
-                                            </div>
-                                            }
-                                        </div>
-                                    </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="slider-direction-2" class="t-cn slider-direction">
-                    <div class="slider-content s-tb slide-2">
-                        <div class="text-left title-container s-tb-c">
-                            <div class="container">
-                                <div class="row align-items-center">
-                                    <div class="col-lg-9">
-                                        <div class="item-category bg-green">Action</div>
-                                        <div class="item-date"><i class="flaticon-clock"></i> 27 Jan, 2020</div>
-                                        <h1 class="item-title"><a href="single-post1.html">War look the next Forward 2020</a></h1>
-                                        <div class="item-paragraph">Nimply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since.</div>
-                                        <div class="post-meta-light">
-                                            <ul>
-                                                <li class="post-author">
-                                                    <div class="author-icon bg-blueviolet">
-                                                        <i class="flaticon-user"></i>
-                                                    </div>
-                                                    <div class="author-content">
-                                                        <div class="item-text">Posted by</div>
-                                                        <div class="author-name"><a href="#">Steven Jones</a></div>
-                                                    </div>
-                                                </li>
-                                                <li class="meta-action"><i class="flaticon-heart"></i>2,350</li>
-                                                <li class="meta-action"><i class="flaticon-comment-white-oval-bubble"></i>1,380</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="post-list-layout2">
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                                    <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                                                </div>
-                                            </div>
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                                    <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                                                </div>
-                                            </div>
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                                    <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                                                </div>
-                                            </div>
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                                    <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="slider-direction-3" class="t-cn slider-direction">
-                    <div class="slider-content s-tb slide-3">
-                        <div class="text-left title-container s-tb-c">
-                            <div class="container">
-                                <div class="row align-items-center">
-                                    <div class="col-lg-9">
-                                        <div class="item-category bg-green">Action</div>
-                                        <div class="item-date"><i class="flaticon-clock"></i> 27 Jan, 2020</div>
-                                        <h1 class="item-title"><a href="single-post1.html">War look the next Forward 2020</a></h1>
-                                        <div class="item-paragraph">Nimply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since.</div>
-                                        <div class="post-meta-light">
-                                            <ul>
-                                                <li class="post-author">
-                                                    <div class="author-icon bg-blueviolet">
-                                                        <i class="flaticon-user"></i>
-                                                    </div>
-                                                    <div class="author-content">
-                                                        <div class="item-text">Posted by</div>
-                                                        <div class="author-name"><a href="#">Steven Jones</a></div>
-                                                    </div>
-                                                </li>
-                                                <li class="meta-action"><i class="flaticon-heart"></i>2,350</li>
-                                                <li class="meta-action"><i class="flaticon-comment-white-oval-bubble"></i>1,380</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="post-list-layout2">
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                                    <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                                                </div>
-                                            </div>
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                                    <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                                                </div>
-                                            </div>
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                                    <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                                                </div>
-                                            </div>
-                                            <div class="media">
-                                                <div class="media-body">
-                                                    <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                                    <h4 class="post-title"><a href="single-post1.html">Hitlist ast Computer ar in the market ...</a></h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>*@
-
-    <!--=====================================-->
     <!--=           Post Start        		=-->
     <!--=====================================-->
     <section class="post-wrap-layout11">
         <div class="container">
             <div class="row gutters-20">
-                @foreach (Blog blog in Model.Blogs.Skip(3).Take(1))
+                @foreach (Blog blog in Model.Blogs.Take(1))
                 {
                     <div class="col-lg-3 col-md-6">
                         <div class="post-grid-layout3 post-grid17">
@@ -312,7 +134,7 @@
                             </div>
                         </div>
                     </div>
-                }@foreach (Blog blog in Model.Blogs.Skip(4).Take(1))
+                }@foreach (Blog blog in Model.Blogs.Skip(1).Take(1))
                 {
                     <div class="col-lg-3 col-md-6">
                         <div class="post-grid-layout3 post-grid17">
@@ -326,7 +148,7 @@
                             </div>
                         </div>
                     </div>
-                }@foreach (Blog blog in Model.Blogs.Skip(5).Take(1))
+                }@foreach (Blog blog in Model.Blogs.Skip(2).Take(1))
                 {
                     <div class="col-lg-3 col-md-6">
                         <div class="post-grid-layout3 post-grid17">
@@ -340,7 +162,7 @@
                             </div>
                         </div>
                     </div>
-                }@foreach (Blog blog in Model.Blogs.Skip(6).Take(1))
+                }@foreach (Blog blog in Model.Blogs.Skip(3).Take(1))
                 {
                     <div class="col-lg-3 col-md-6">
                         <div class="post-grid-layout3 post-grid17">
@@ -363,57 +185,63 @@
             <div class="row">
                 <div class="col-lg-9">
                     <div class="rc-carousel nav-control-layout2" data-loop="true" data-items="30" data-animateout="fadeOut" data-margin="15" data-autoplay="false" data-autoplay-timeout="4000" data-smart-speed="1000" data-dots="false" data-nav="true" data-nav-speed="false" data-r-x-small="1" data-r-x-small-nav="true" data-r-x-small-dots="false" data-r-x-medium="1" data-r-x-medium-nav="true" data-r-x-medium-dots="false" data-r-small="1" data-r-small-nav="true" data-r-small-dots="false" data-r-medium="1" data-r-medium-nav="true" data-r-medium-dots="false" data-r-large="1" data-r-large-nav="true" data-r-large-dots="false" data-r-extra-large="1" data-r-extra-large-nav="true" data-r-extra-large-dots="false">
-                        <div class="post-grid-layout3 post-grid15">
-                            <div class="post-img">
-                                <img src="~/img/ManWithCodeStickyNote926x451.jpg" alt="Games">
-                            </div>
-                            <div class="post-content">
-                                <div class="item-category bg-green">Action</div>
-                                <div class="post-date"><i class="flaticon-clock"></i> 27 June, 2019</div>
-                                <h2 class="post-title"><a href="single-post1.html">Fighter War look amazing stories of the next Forward 2018</a></h2>
-                                <div class="post-meta-light">
-                                    <ul>
-                                        <li class="post-author">
-                                            <div class="author-icon bg-blueviolet">
-                                                <i class="flaticon-user"></i>
-                                            </div>
-                                            <div class="author-content">
-                                                <div class="item-text">Posted by</div>
-                                                <div class="author-name"><a href="#">Steven Jones</a></div>
-                                            </div>
-                                        </li>
-                                        <li class="meta-action"><i class="flaticon-heart"></i>2,350</li>
-                                        <li class="meta-action"><i class="flaticon-comment-white-oval-bubble"></i>1,380</li>
-                                    </ul>
+                        @foreach (BlogPost blogPost in Model.NewestCards.SidePostCards.Skip(3).Take(1))
+                        {
+                            <div class="post-grid-layout3 post-grid15">
+                                <div class="post-img">
+                                    <img src="~/img/ManWithCodeStickyNote926x451.jpg" alt="Games">
+                                </div>
+                                <div class="post-content">
+                                    <div class="item-category bg-green">@blogPost.Blog.Name</div>
+                                    <div class="post-date"><i class="flaticon-clock"></i> @blogPost.Created.ToString("dd MMM, yyyy")</div>
+                                    <h2 class="post-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">@blogPost.Title</a></h2>
+                                    <div class="post-meta-light">
+                                        <ul>
+                                            <li class="post-author">
+                                                <div class="author-icon bg-blueviolet">
+                                                    <i class="flaticon-user"></i>
+                                                </div>
+                                                <div class="author-content">
+                                                    <div class="item-text">Posted by</div>
+                                                    <div class="author-name">Monae Lee</div>
+                                                </div>
+                                            </li>
+
+                                            <li class="meta-action"><i class="flaticon-comment-white-oval-bubble"></i>@blogPost.Comments.Count()</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="post-grid-layout3 post-grid15">
-                            <div class="post-img">
-                                <img src="~/img/codeWithGlassesInFront926x451.jpg" alt="Games">
-                            </div>
-                            <div class="post-content">
-                                <div class="item-category bg-green">Adventure</div>
-                                <div class="post-date"><i class="flaticon-clock"></i> 28 Jan, 2020</div>
-                                <h2 class="post-title"><a href="single-post1.html">My microwave is too small to fit the microy Software</a></h2>
-                                <div class="post-meta-light">
-                                    <ul>
-                                        <li class="post-author">
-                                            <div class="author-icon bg-blueviolet">
-                                                <i class="flaticon-user"></i>
-                                            </div>
-                                            <div class="author-content">
-                                                <div class="item-text">Posted by</div>
-                                                <div class="author-name"><a href="#">Steven Jones</a></div>
-                                            </div>
-                                        </li>
-                                        <li class="meta-action"><i class="flaticon-heart"></i>2,350</li>
-                                        <li class="meta-action"><i class="flaticon-comment-white-oval-bubble"></i>1,380</li>
-                                    </ul>
+                        }
+                        @foreach (BlogPost blogPost in Model.NewestCards.SidePostCards.Skip(5).Take(1))
+                        {
+                            <div class="post-grid-layout3 post-grid15">
+                                <div class="post-img">
+                                    <img src="~/img/codeWithGlassesInFront926x451.jpg" alt="Games">
+                                </div>
+                                <div class="post-content">
+                                    <div class="item-category bg-green">@blogPost.Blog.Name</div>
+                                    <div class="post-date"><i class="flaticon-clock"></i>@blogPost.Created.ToString("dd MMM, yyyy")</div>
+                                    <h2 class="post-title"><a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">@blogPost.Title</a></h2>
+                                    <div class="post-meta-light">
+                                        <ul>
+                                            <li class="post-author">
+                                                <div class="author-icon bg-blueviolet">
+                                                    <i class="flaticon-user"></i>
+                                                </div>
+                                                <div class="author-content">
+                                                    <div class="item-text">Posted by</div>
+                                                    <div class="author-name">Monae Lee</div>
+                                                </div>
+                                            </li>
+                                           
+                                            <li class="meta-action"><i class="flaticon-comment-white-oval-bubble"></i>@blogPost.Comments.Count()</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
+                        }
                         </div>
-                    </div>
                 </div>
                 <div class="widget widget-newsletter">
                     <h3 class="item-title">Subscribe <span>Newsletter</span></h3>

@@ -50,7 +50,7 @@
                 {
                     <a asp-action="Edit" asp-controller="BlogPosts" asp-route-id="@Model.Id" class="btn-fill-md mb-4 justify-content-end">EDIT POST</a>
                 }
-                <div class="post-img">
+                <div class="post-img shadow shadow-lg" >
                     <img src="@_imageService.DecodeImage(Model.ImageData, Model.ImageType)" width="540" height="250" alt="Post">
                 </div>
                 <div class="post-content">
